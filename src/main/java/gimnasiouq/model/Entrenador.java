@@ -1,4 +1,4 @@
-package org.example.proyecto_final_javefx.model;
+package gimnasiouq.model;
 
 import java.util.ArrayList;
 import java.util.List;

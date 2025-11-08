@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="502.0" prefWidth="741.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.viewcontroller.RecepUsuariosViewController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Usuarios">
+                    <font>
+                        <Font name="Arial Bold" size="25.0" />
+                    </font>
+                </Text>
+                <Separator prefHeight="18.0" prefWidth="682.0">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                </Separator>
+                <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="NEVER">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="Nombre:" />
+                        <Label text="Identificación:" GridPane.columnIndex="2" />
+                        <Label text="Edad:" GridPane.rowIndex="1" />
+                        <Label text="Celular:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtNombre" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="txtEdad" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="txtIdentificacion" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="txtCelular" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </TextField>
+                        <Label text="Usuario:" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="comboBoxUsuarios" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione una clase de usuario" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </ComboBox>
+                        <Label text="Tipo:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="comboBoxMembresia" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione un tipo de membresía" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </ComboBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </GridPane>
+                <Separator prefHeight="18.0" prefWidth="682.0">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                </Separator>
+                <GridPane alignment="CENTER" hgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" />
+                        <ColumnConstraints halignment="CENTER" percentWidth="0.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
+                        <Button fx:id="btnAgregar" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" GridPane.columnIndex="1" />
+                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2" />
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
+                    </children>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                </GridPane>
+                <Separator prefHeight="18.0" prefWidth="682.0">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin></Separator>
+                <TableView fx:id="tableUsuario" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="721.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="tcUsuario" prefWidth="115.99999696016312" text="Usuario" />
+                        <TableColumn fx:id="tcNombre" prefWidth="124.79998779296875" text="Nombre" />
+                        <TableColumn fx:id="tcIdentificacion" prefWidth="139.2000274658203" text="Identificacion" />
+                        <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="73.5999755859375" text="Edad" />
+                        <TableColumn fx:id="tcCelular" prefWidth="129.5999755859375" text="Celular" />
+                        <TableColumn fx:id="tcMembresia" prefWidth="156.0" text="Membresia" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>

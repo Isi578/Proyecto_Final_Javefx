@@ -1,14 +1,14 @@
-module org.example.proyecto_final_javefx {
+module gimnasiouq {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.base;
 
+    opens gimnasiouq to javafx.fxml;
+    exports gimnasiouq;
 
-    opens org.example.proyecto_final_javefx to javafx.fxml;
-    exports org.example.proyecto_final_javefx;
+    exports gimnasiouq.viewcontroller;
+    opens gimnasiouq.viewcontroller to javafx.fxml;
 
-    exports org.example.proyecto_final_javefx.viewcontroller;
-    opens org.example.proyecto_final_javefx.viewcontroller to javafx.fxml;
-
-    exports org.example.proyecto_final_javefx.model;
-    opens org.example.proyecto_final_javefx.model to javafx.fxml;
+    exports gimnasiouq.model;
+    opens gimnasiouq.model to javafx.fxml;
 }
