@@ -2,17 +2,19 @@ package gimnasiouq.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+//atributos
 public abstract class Membresia {
     private String tipo;
     private double costo;
     private LocalDate inicio;
     private LocalDate fin;
     private boolean activa;
+    private  boolean accesoGym;
     private LocalDate fechaPago;
     private LocalTime horaPago;
 
-    public Membresia(String tipo, double costo, LocalDate inicio, LocalDate fin, boolean activa) {
+//constructor
+    public Membresia(String tipo, double costo, LocalDate inicio, LocalDate fin, boolean activa, boolean accesoGym) {
         this.tipo = tipo;
         this.costo = costo;
         this.inicio = inicio;
@@ -27,10 +29,10 @@ public abstract class Membresia {
         this.horaPago = LocalTime.now();
     }
 
+//get y set
     public String getTipo() {
         return tipo;
     }
-
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
@@ -38,7 +40,6 @@ public abstract class Membresia {
     public double getCosto() {
         return costo;
     }
-
     public void setCosto(double costo) {
         this.costo = costo;
     }
@@ -46,7 +47,6 @@ public abstract class Membresia {
     public LocalDate getInicio() {
         return inicio;
     }
-
     public void setInicio(LocalDate inicio) {
         this.inicio = inicio;
     }
@@ -54,7 +54,6 @@ public abstract class Membresia {
     public LocalDate getFin() {
         return fin;
     }
-
     public void setFin(LocalDate fin) {
         this.fin = fin;
     }
@@ -62,24 +61,30 @@ public abstract class Membresia {
     public boolean isActiva() {
         return activa;
     }
-
     public void setActiva(boolean activa) {
         this.activa = activa;
+    }
+
+    public boolean isAccesoGym() {
+        return accesoGym;
+    }
+    public void setAccesoGym(boolean accesoGeneral) {
+        this.accesoGym = accesoGym;
     }
 
     public LocalDate getFechaPago() {
         return fechaPago;
     }
-
     public LocalTime getHoraPago() {
         return horaPago;
     }
 
+//metodo para definir vigencia de la memebresia
     public boolean estaVigente() {
         LocalDate hoy = LocalDate.now();
         return activa && (fin.isAfter(hoy) || fin.isEqual(hoy));
     }
-
+//metodo para saber los dias que quedan de a membresia
     public long diasRestantes() {
         LocalDate hoy = LocalDate.now();
         if (hoy.isAfter(fin)) {
@@ -88,8 +93,20 @@ public abstract class Membresia {
         return java.time.temporal.ChronoUnit.DAYS.between(hoy, fin);
     }
 
+//to string
     @Override
     public String toString() {
-        return tipo + " - $" + costo + " (Vigente hasta: " + fin + ")";
+        return "Membresia{" +
+                "tipo='" + tipo + '\'' +
+                ", costo=" + costo +
+                ", inicio=" + inicio +
+                ", fin=" + fin +
+                ", activa=" + activa +
+                ", accesoGym=" + accesoGym +
+                ", fechaPago=" + fechaPago +
+                ", horaPago=" + horaPago +
+                '}';
     }
+//metodo para obtener los beneficios de la membresia
+    public abstract String obtenerBeneficios();
 }
