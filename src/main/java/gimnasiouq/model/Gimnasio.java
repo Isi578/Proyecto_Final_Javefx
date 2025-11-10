@@ -95,4 +95,86 @@ public class Gimnasio {
     public void setListaRegistrosAcceso(List<ControlAcceso> listaRegistrosAcceso) {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
+
+    public boolean asignarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty() || !validarMembresia(membresia)) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        usuario.setMembresiaActiva(membresia);
+        return true;
+    }
+
+    public boolean actualizarMembresiaUsuario(String identificacionUsuario, Membresia membresia) {
+        return asignarMembresiaUsuario(identificacionUsuario, membresia);
+    }
+
+    public boolean eliminarMembresiaUsuario(String identificacionUsuario) {
+        if (identificacionUsuario == null || identificacionUsuario.isEmpty()) return false;
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        if (usuario == null) return false;
+        if (usuario.getMembresiaActiva() == null) return false;
+        usuario.setMembresiaActiva(null);
+        return true;
+    }
+
+    public Membresia obtenerMembresiaUsuario(String identificacionUsuario) {
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacionUsuario);
+        return usuario != null ? usuario.getMembresiaActiva() : null;
+    }
+
+    public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
+        if (tipoPlan == null || tipoPlan.isEmpty() || usuario == null) return null;
+
+        java.time.LocalDate fechaInicio = java.time.LocalDate.now();
+        java.time.LocalDate fechaFin;
+        double costo = 0;
+
+        String plan = tipoPlan.trim().toLowerCase();
+        String tier = (tipoMembresia == null || tipoMembresia.isBlank()) ? "basica" : tipoMembresia.trim().toLowerCase();
+
+        switch (plan) {
+            case "mensual" -> fechaFin = fechaInicio.plusMonths(1);
+            case "trimestral" -> fechaFin = fechaInicio.plusMonths(3);
+            case "anual" -> fechaFin = fechaInicio.plusYears(1);
+            default -> {
+                return null;
+            }
+        }
+
+        if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
+            switch (plan) {
+                case "mensual" -> costo = 10000;
+                case "trimestral" -> costo = 30000;
+                case "anual" -> costo = 100000;
+            }
+        } else if (tier.equals("premium")) {
+            switch (plan) {
+                case "mensual" -> costo = 15000;
+                case "trimestral" -> costo = 40000;
+                case "anual" -> costo = 150000;
+            }
+        } else if (tier.equals("vip")) {
+            switch (plan) {
+                case "mensual" -> costo = 20000;
+                case "trimestral" -> costo = 50000;
+                case "anual" -> costo = 200000;
+            }
+        }
+
+        if (usuario instanceof Estudiante) {
+            costo *= 0.90; // 10% de descuento
+        } else if (usuario instanceof TrabajadorUQ) {
+            costo *= 0.80; // 20% de descuento
+        }
+
+        if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
+            return new MembresiaBasica(costo, fechaInicio, fechaFin);
+        } else if (tier.equals("premium")) {
+            return new MembresiaPremium(costo, fechaInicio, fechaFin);
+        } else if (tier.equals("vip")) {
+            return new MembresiaVIP(costo, fechaInicio, fechaFin);
+        }
+
+        return new MembresiaBasica(costo, fechaInicio, fechaFin);
+    }
 }
