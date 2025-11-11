@@ -24,7 +24,7 @@
                                     <children>
                                         <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                             <items>
-                                                <fx:include fx:id="administradoraUsuarios" source="adminUsuario.fxml" />
+                                                <fx:include fx:id="administradorUsuarios" source="adminUsuario.fxml" />
                                             </items>
                                         </SplitPane>
                                     </children>
@@ -37,7 +37,7 @@
                                     <children>
                                         <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
                                             <items>
-                                                <fx:include fx:id="administradoraMembresias" source="adminMembresia.fxml" />
+                                                <fx:include fx:id="administradorMembresias" source="adminMembresia.fxml" />
                                             </items>
                                         </SplitPane>
                                     </children>
