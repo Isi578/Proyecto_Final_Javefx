@@ -18,12 +18,45 @@
             <children>
                 <TabPane fx:id="tabPane" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
-                        <Tab text="Registrar Usuarios"></Tab>
-                        <Tab text="Asignar Membresías"></Tab>
-                        <Tab text="Reservar Clases"></Tab>
-                        <Tab text="Control de Acceso"></Tab>
-                        <Tab text="Reportes"></Tab>
-                        <Tab text="Entrenadores"></Tab>
+                        <Tab text="Registrar Usuarios">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="504.0" prefWidth="762.0">
+                                    <children>
+                                        <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
+                                            <items>
+                                                <fx:include fx:id="administradoraUsuarios" source="adminUsuario.fxml" />
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Asignar Membresías">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="504.0" prefWidth="762.0">
+                                    <children>
+                                        <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
+                                            <items>
+                                                <fx:include fx:id="administradoraMembresias" source="adminMembresia.fxml" />
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+
+                        <Tab text="Reservar Clases">
+
+                        </Tab>
+                        <Tab text="Control de Acceso">
+
+                        </Tab>
+                        <Tab text="Reportes">
+
+                        </Tab>
+                        <Tab text="Entrenadores">
+
+                        </Tab>
                         <Tab>
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />

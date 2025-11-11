@@ -44,9 +44,15 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab text="Reservar Clases"></Tab>
-                        <Tab text="Control de Acceso"></Tab>
-                        <Tab text="Reportes"></Tab>
+                        <Tab text="Reservar Clases">
+
+                        </Tab>
+                        <Tab text="Control de Acceso">
+
+                        </Tab>
+                        <Tab text="Reportes">
+
+                        </Tab>
                         <Tab>
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />

@@ -22,7 +22,7 @@
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Usuarios">
                     <font>
-                        <Font name="Arial Bold" size="25.0" />
+                        <Font name="Times New Roman" size="25.0" />
                     </font>
                 </Text>
                 <Separator prefHeight="18.0" prefWidth="682.0">
@@ -43,9 +43,18 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="Nombre:" />
-                        <Label text="Identificación:" GridPane.columnIndex="2" />
-                        <Label text="Edad:" GridPane.rowIndex="1" />
+                        <Label text="Nombre:">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
+                        <Label text="Identificación:" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
+                        <Label text="Edad:" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <Label text="Celular:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <TextField fx:id="txtNombre" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1">
                             <GridPane.margin>
@@ -67,13 +76,19 @@
                                 <Insets />
                             </GridPane.margin>
                         </TextField>
-                        <Label text="Usuario:" GridPane.rowIndex="2" />
+                        <Label text="Usuario:" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <ComboBox fx:id="comboBoxUsuarios" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione una clase de usuario" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin>
                         </ComboBox>
-                        <Label text="Tipo:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="Tipo:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <ComboBox fx:id="comboBoxMembresia" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="250.0" promptText="Seleccione un tipo de membresía" GridPane.columnIndex="3" GridPane.rowIndex="2">
                             <GridPane.margin>
                                 <Insets />
@@ -100,10 +115,22 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
-                        <Button fx:id="btnAgregar" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" GridPane.columnIndex="1" />
-                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2" />
-                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnAgregar" mnemonicParsing="false" onAction="#onAgregar" prefWidth="80.0" text="Agregar" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" prefHeight="26.0" prefWidth="80.0" text="Actualizar" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
                     </children>
                     <VBox.margin>
                         <Insets />
