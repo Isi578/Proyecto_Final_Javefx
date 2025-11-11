@@ -1,9 +1,11 @@
 package gimnasiouq.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-//atributos
+
+// Clase principal del modelo que gestiona todas las listas de datos.
 public class Gimnasio {
     private List<Usuario> listaUsuarios;
     private List<Recepcion> listaRecepcionista;
@@ -131,8 +133,8 @@ public class Gimnasio {
     public Membresia calcularMembresiaPorPlan(String tipoPlan, String tipoMembresia, Usuario usuario) {
         if (tipoPlan == null || tipoPlan.isEmpty() || usuario == null) return null;
 
-        java.time.LocalDate fechaInicio = java.time.LocalDate.now();
-        java.time.LocalDate fechaFin;
+        LocalDate fechaInicio = LocalDate.now();
+        LocalDate fechaFin;
         double costo = 0;
         boolean costoAsignado = false;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Usuario {
+public abstract class Usuario {
 
     private String nombre;
     private String identificacion;
@@ -15,7 +15,7 @@ public class Usuario {
     private String celular;
     private String tipoMembresia;
     private Membresia membresiaObj;
-    private final List<ReservaClase> reservas = new ArrayList<>();
+    // private final List<ReservaClase> reservas = new ArrayList<>();
 
     public Usuario(String nombre, String identificacion, int edad, String celular, String membresia) {
         this.nombre = nombre;
@@ -70,9 +70,9 @@ public class Usuario {
         this.tipoMembresia = membresia;
     }
 
-    public List<ReservaClase> getReservas() {
-        return reservas;
-    }
+    // public List<ReservaClase> getReservas() {
+    //     return reservas;
+    // }
 
     public String getTipoMembresia() {
         return tipoMembresia;

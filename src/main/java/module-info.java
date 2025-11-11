@@ -2,7 +2,6 @@ module gimnasiouq {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.base;
-    requires gimnasiouq;
 
     opens gimnasiouq to javafx.fxml;
     exports gimnasiouq;

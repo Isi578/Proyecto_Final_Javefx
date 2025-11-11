@@ -1,11 +1,11 @@
 package gimnasiouq.viewcontroller;
 
-import com.gluonhq.charm.glisten.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
 
 public class RecepMembresiaViewController {
 
@@ -50,15 +50,6 @@ public class RecepMembresiaViewController {
 
     @FXML
     private TableColumn<?, ?> tcUsuario;
-
-    @FXML
-    private TextField txtCosto;
-
-    @FXML
-    private TextField txtFechaFin;
-
-    @FXML
-    private TextField txtFechaInicio;
 
     @FXML
     void onActualizar(ActionEvent event) {
