@@ -78,7 +78,7 @@
                   <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
-            <TableView prefHeight="0.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" prefHeight="0.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="tcUsuario" prefWidth="75.0" text="Usuario" />
                 <TableColumn fx:id="tcNombre" prefWidth="75.0" text="Nombre" />
