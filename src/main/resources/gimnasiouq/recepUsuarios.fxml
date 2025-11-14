@@ -146,18 +146,21 @@
                     <VBox.margin>
                         <Insets />
                     </VBox.margin></Separator>
-                <TableView fx:id="tableUsuario" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="721.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableUsuario" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="717.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="tcUsuario" prefWidth="115.99999696016312" text="Usuario" />
                         <TableColumn fx:id="tcNombre" prefWidth="124.79998779296875" text="Nombre" />
                         <TableColumn fx:id="tcIdentificacion" prefWidth="139.2000274658203" text="Identificacion" />
-                        <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="73.5999755859375" text="Edad" />
-                        <TableColumn fx:id="tcCelular" prefWidth="129.5999755859375" text="Celular" />
+                        <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="95.0" text="Edad" />
+                        <TableColumn fx:id="tcCelular" prefWidth="109.0" text="Celular" />
                         <TableColumn fx:id="tcMembresia" prefWidth="156.0" text="Membresia" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
                 </TableView>
             </children>
             <padding>
