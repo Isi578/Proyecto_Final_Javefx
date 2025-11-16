@@ -199,22 +199,22 @@ public class Gimnasio {
 // CRUD del Entrenador
 
 // metodo para verificar existencia de entrenador
-    public boolean verificarEntrenador(String id) {
-        return listaEntrenador.stream().anyMatch(e -> e.getId().equals(id));
+    public boolean verificarEntrenador(String identificacion) {
+        return listaEntrenador.stream().anyMatch(e -> e.getIdentificacion().equals(identificacion));
     }
 
 //metodo para el registro de un entrenador
     public Entrenador registrarEntrenador(Entrenador entrenador) throws Exception {
-        if (verificarEntrenador(entrenador.getId())) {
-            throw new Exception("El entrenador con ID: " + entrenador.getId() + " ya se encuentra registrado.");
+        if (verificarEntrenador(entrenador.getIdentificacion())) {
+            throw new Exception("El entrenador con ID: " + entrenador.getIdentificacion() + " ya se encuentra registrado.");
         }
         this.listaEntrenador.add(entrenador);
         return entrenador;
     }
 
 //metodo para buscar un entrenador
-    public Optional<Entrenador> buscarEntrenador(String id) {
-        return listaEntrenador.stream().filter(e -> e.getId().equals(id)).findFirst();
+    public Optional<Entrenador> buscarEntrenador(String identificacion) {
+        return listaEntrenador.stream().filter(e -> e.getIdentificacion().equals(identificacion)).findFirst();
     }
 
 //metodo para actualizar un entrenador
@@ -230,10 +230,10 @@ public class Gimnasio {
     }
 
 //metodo para eliminar un entrenador
-    public void eliminarEntrenador(String id) throws Exception {
-        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getId().equals(id));
+    public void eliminarEntrenador(String identificacion) throws Exception {
+        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getIdentificacion().equals(identificacion));
         if (!removed) {
-            throw new Exception("No se pudo eliminar. No existe un entrenador con el ID: " + id);
+            throw new Exception("No se pudo eliminar. No existe un entrenador con el ID: " + identificacion);
         }
     }
 }

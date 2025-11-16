@@ -6,15 +6,15 @@ public class Entrenador {
 
 // Atributos
     private String nombre;
-    private String id;
-    private int edad;
+    private String identificacion;
+    private String edad;
     private String correo;
     private String cargo;
 
 // Constructores
-    public Entrenador(String nombre, String id, int edad, String correo, String cargo) {
+    public Entrenador(String nombre, String identificacion, String edad, String correo, String cargo) {
         this.nombre = nombre;
-        this.id = id;
+        this.identificacion = identificacion;
         this.edad = edad;
         this.correo = correo;
         this.cargo = cargo;
@@ -23,10 +23,10 @@ public class Entrenador {
 // Getters y Setters
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public int getEdad() { return edad; }
-    public void setEdad(int edad) { this.edad = edad; }
+    public String getIdentificacion() { return identificacion; }
+    public void setIdentificacion(String identificacion) { this.identificacion = identificacion; }
+    public String getEdad() { return edad; }
+    public void setEdad(String edad) { this.edad = edad; }
     public String getCorreo() { return correo; }
     public void setCorreo(String correo) { this.correo = correo; }
     public String getCargo() { return cargo; }
@@ -37,8 +37,8 @@ public class Entrenador {
     public String toString() {
         return "Entrenador{" +
                 "nombre='" + nombre + '\'' +
-                ", id='" + id + '\'' +
-                ", edad=" + edad +
+                ", identificacion='" + identificacion + '\'' +
+                ", edad=" + edad + '\'' +
                 ", correo='" + correo + '\'' +
                 ", cargo='" + cargo + '\'' +
                 '}';
@@ -49,11 +49,11 @@ public class Entrenador {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entrenador that = (Entrenador) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(identificacion, that.identificacion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(identificacion);
     }
 }

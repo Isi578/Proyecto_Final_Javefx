@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="486.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.viewcontroller.AdminEntrenadorViewController">
+   <children>
+      <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Entrenador">
+         <font>
+            <Font name="Times New Roman" size="25.0" />
+         </font>
+      </Text>
+      <Separator layoutX="-2.0" layoutY="41.0" prefHeight="16.0" prefWidth="679.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
+      <GridPane hgap="10.0" layoutX="45.0" layoutY="54.0" prefHeight="93.0" prefWidth="617.0" AnchorPane.bottomAnchor="350.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Identificacion:" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edad:" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Correo: " GridPane.columnIndex="2">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cargo:" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtNombre" GridPane.columnIndex="1">
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtIdentificacion" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtEdad" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtCorreo" GridPane.columnIndex="3">
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtCargo" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </TextField>
+         </children>
+         <opaqueInsets>
+            <Insets left="5.0" right="5.0" />
+         </opaqueInsets>
+      </GridPane>
+      <Separator layoutX="-2.0" layoutY="91.0" prefHeight="22.0" prefWidth="674.0" AnchorPane.bottomAnchor="336.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" AnchorPane.topAnchor="125.0" />
+      <GridPane hgap="10.0" layoutX="182.0" layoutY="141.0" prefHeight="30.0" prefWidth="304.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="141.0" minWidth="10.0" prefWidth="64.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.0" minWidth="10.0" prefWidth="77.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="61.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" text="Nuevo">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#onGuardar" text="Guardar" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar" GridPane.columnIndex="2">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar" GridPane.columnIndex="3">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </GridPane>
+      <Separator layoutY="181.0" prefHeight="45.0" prefWidth="677.0" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
+      <TableView fixedCellSize="0.0" layoutX="7.0" layoutY="181.0" prefHeight="301.0" prefWidth="647.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="170.0">
+        <columns>
+          <TableColumn fx:id="tcNombre" prefWidth="137.0" text="Nombre" />
+          <TableColumn fx:id="tcIdentificacion" prefWidth="143.0" text="Identificacion" />
+            <TableColumn fx:id="tcEdad" minWidth="0.0" prefWidth="130.0" text="Edad" />
+            <TableColumn fx:id="tcCorreo" minWidth="0.0" prefWidth="116.0" text="Correo" />
+            <TableColumn fx:id="tcCargo" minWidth="0.0" prefWidth="140.0" text="Cargo" />
+        </columns>
+         <opaqueInsets>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </opaqueInsets>
+      </TableView>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

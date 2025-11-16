@@ -30,7 +30,7 @@
                         <Insets />
                     </opaqueInsets>
                 </Separator>
-                <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="NEVER">
+                <GridPane alignment="CENTER" hgap="10.0" prefHeight="98.0" prefWidth="726.0" vgap="10.0" VBox.vgrow="NEVER">
                     <columnConstraints>
                         <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" percentWidth="50.0" />
@@ -96,7 +96,7 @@
                         </ComboBox>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="10.0" left="5.0" right="5.0" />
                     </VBox.margin>
                 </GridPane>
                 <Separator prefHeight="18.0" prefWidth="682.0">
@@ -159,7 +159,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                <VBox.margin>
-                  <Insets />
+                  <Insets left="5.0" right="5.0" />
                </VBox.margin>
                 </TableView>
             </children>
