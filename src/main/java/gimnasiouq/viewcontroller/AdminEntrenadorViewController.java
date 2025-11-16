@@ -62,21 +62,24 @@ public class AdminEntrenadorViewController {
         private TextField txtNombre;
 
         @FXML
-        void onActualizar(ActionEvent event) {
-        }
+        void onActualizar(ActionEvent event) {actualizarEntrenador ();}
+            private void actualizarEntrenador () {
+            }
 
         @FXML
-        void onEliminar(ActionEvent event) {
-        }
+        void onEliminar(ActionEvent event) {eliminarEntrenador();}
+            private void eliminarReservaClase (){
+            }
 
         @FXML
-        void onGuardar(ActionEvent event) {
-        }
+        void onGuardar(ActionEvent event) {guardarEntrenador();}
+            private void guardarReservaClase (){
+            }
 
         @FXML
-        void onNuevo(ActionEvent event) {
-        }
-
+        void onNuevo(ActionEvent event) {nuevoEntrenador();}
+            private void nuevoEntrenador (){
+            }
 
         private void nuevoEntrenador() {
             limpiarCampos();

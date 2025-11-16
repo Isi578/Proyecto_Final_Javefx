@@ -72,30 +72,22 @@ public class RecepMembresiaViewController {
 
     @FXML
     void onActualizar(ActionEvent event) {actualizarMembresia();}
-
     private void actualizarMembresia() {
-
     }
 
     @FXML
     void onAsignar(ActionEvent event) {asignarMembresia();}
-
     private void asignarMembresia() {
-
     }
 
     @FXML
     void onEliminar(ActionEvent event) {eliminarMembresia();}
-
     private void eliminarMembresia() {
-
     }
 
     @FXML
     void onNuevo(ActionEvent event) {nuevaMembresia();}
-
     private void nuevaMembresia() {
-
     }
 
     @FXML

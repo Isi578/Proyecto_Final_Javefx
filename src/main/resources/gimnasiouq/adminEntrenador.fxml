@@ -13,7 +13,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane prefHeight="486.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.viewcontroller.AdminEntrenadorViewController">
    <children>
       <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Entrenador">
@@ -21,7 +20,7 @@
             <Font name="Times New Roman" size="25.0" />
          </font>
       </Text>
-      <Separator layoutX="-2.0" layoutY="41.0" prefHeight="16.0" prefWidth="679.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
+      <Separator layoutX="-2.0" layoutY="41.0" prefHeight="16.0" prefWidth="679.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <GridPane hgap="10.0" layoutX="45.0" layoutY="54.0" prefHeight="93.0" prefWidth="617.0" AnchorPane.bottomAnchor="350.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -86,7 +85,7 @@
             <Insets left="5.0" right="5.0" />
          </opaqueInsets>
       </GridPane>
-      <Separator layoutX="-2.0" layoutY="91.0" prefHeight="22.0" prefWidth="674.0" AnchorPane.bottomAnchor="336.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" AnchorPane.topAnchor="125.0" />
+      <Separator layoutX="-2.0" layoutY="91.0" prefHeight="22.0" prefWidth="674.0" AnchorPane.bottomAnchor="336.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0" />
       <GridPane hgap="10.0" layoutX="182.0" layoutY="141.0" prefHeight="30.0" prefWidth="304.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="141.0" minWidth="10.0" prefWidth="64.0" />
@@ -120,7 +119,7 @@
             </Button>
          </children>
       </GridPane>
-      <Separator layoutY="181.0" prefHeight="45.0" prefWidth="677.0" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="-12.0" />
+      <Separator layoutY="181.0" prefHeight="45.0" prefWidth="677.0" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <TableView fixedCellSize="0.0" layoutX="7.0" layoutY="181.0" prefHeight="301.0" prefWidth="647.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="170.0">
         <columns>
           <TableColumn fx:id="tcNombre" prefWidth="137.0" text="Nombre" />
