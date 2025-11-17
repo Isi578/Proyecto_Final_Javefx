@@ -1,5 +1,6 @@
 package gimnasiouq.factory;
 
+import gimnasiouq.model.Entrenador;
 import gimnasiouq.model.Gimnasio;
 import gimnasiouq.model.Usuario;
 import gimnasiouq.util.DataUtil;
@@ -13,6 +14,7 @@ public class ModelFactory {
     private final Gimnasio gimnasioUQ;
 
     private final ObservableList<Usuario> listaUsuariosObservable;
+    private final ObservableList<Entrenador> listaEntrenadoresObservable;
 
     public static ModelFactory getInstance(){
         if (modelFactory == null){
@@ -24,11 +26,21 @@ public class ModelFactory {
     private ModelFactory() {
         gimnasioUQ = DataUtil.inicializarDatos();
         listaUsuariosObservable = FXCollections.observableArrayList(gimnasioUQ.getListaUsuarios());
+        listaEntrenadoresObservable = FXCollections.observableArrayList(gimnasioUQ.getListaEntrenador());
+    }
+
+    public Gimnasio getGimnasio() {
+        return gimnasioUQ;
     }
 
     public ObservableList<Usuario> obtenerUsuariosObservable() {
         listaUsuariosObservable.setAll(gimnasioUQ.getListaUsuarios());
         return listaUsuariosObservable;
+    }
+
+    public ObservableList<Entrenador> obtenerEntrenadorObservable() {
+        listaEntrenadoresObservable.setAll(gimnasioUQ.getListaEntrenador());
+        return listaEntrenadoresObservable;
     }
 
     //<editor-fold desc="CRUD Usuario">
@@ -51,6 +63,32 @@ public class ModelFactory {
 
     public Optional<Usuario> buscarUsuario(String id) {
         return gimnasioUQ.buscarUsuario(id);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="CRUD Entrenador">
+    public boolean agregarEntrenador(Entrenador entrenador) {
+        boolean agregado = gimnasioUQ.agregarEntrenador(entrenador);
+        if (agregado) {
+            obtenerEntrenadorObservable();
+        }
+        return agregado;
+    }
+
+    public Entrenador actualizarEntrenador(String identificacion, Entrenador entrenador) throws Exception {
+        Entrenador actualizado = gimnasioUQ.actualizarEntrenador(identificacion, entrenador);
+        if (actualizado != null) {
+            obtenerEntrenadorObservable();
+        }
+        return actualizado;
+    }
+
+    public boolean eliminarEntrenador(String identificacion) throws Exception {
+        boolean eliminado = gimnasioUQ.eliminarEntrenador(identificacion);
+        if (eliminado) {
+            obtenerEntrenadorObservable();
+        }
+        return eliminado;
     }
     //</editor-fold>
 }

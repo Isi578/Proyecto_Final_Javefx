@@ -120,7 +120,7 @@
          </children>
       </GridPane>
       <Separator layoutY="181.0" prefHeight="45.0" prefWidth="677.0" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <TableView fixedCellSize="0.0" layoutX="7.0" layoutY="181.0" prefHeight="301.0" prefWidth="647.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="170.0">
+      <TableView fx:id="tableEntrenador" fixedCellSize="0.0" layoutX="7.0" layoutY="181.0" prefHeight="301.0" prefWidth="647.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="170.0">
         <columns>
           <TableColumn fx:id="tcNombre" prefWidth="137.0" text="Nombre" />
           <TableColumn fx:id="tcIdentificacion" prefWidth="143.0" text="Identificacion" />

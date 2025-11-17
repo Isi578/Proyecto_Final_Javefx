@@ -203,13 +203,11 @@ public class Gimnasio {
         return listaEntrenador.stream().anyMatch(e -> e.getIdentificacion().equals(identificacion));
     }
 
-//metodo para el registro de un entrenador
-    public Entrenador registrarEntrenador(Entrenador entrenador) throws Exception {
+    public boolean agregarEntrenador(Entrenador entrenador) {
         if (verificarEntrenador(entrenador.getIdentificacion())) {
-            throw new Exception("El entrenador con ID: " + entrenador.getIdentificacion() + " ya se encuentra registrado.");
+            return false;
         }
-        this.listaEntrenador.add(entrenador);
-        return entrenador;
+        return listaEntrenador.add(entrenador);
     }
 
 //metodo para buscar un entrenador
@@ -230,10 +228,11 @@ public class Gimnasio {
     }
 
 //metodo para eliminar un entrenador
-    public void eliminarEntrenador(String identificacion) throws Exception {
+    public boolean eliminarEntrenador(String identificacion) throws Exception {
         boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getIdentificacion().equals(identificacion));
         if (!removed) {
             throw new Exception("No se pudo eliminar. No existe un entrenador con el ID: " + identificacion);
         }
+        return removed;
     }
 }
