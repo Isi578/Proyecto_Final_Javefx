@@ -7,7 +7,7 @@ public class Estudiante extends Usuario {
         super(nombre, id, edad, telefono, membresia);
         this.descuento = descuento;
     }
-
+//Get y Set
     public double getDescuento() {
         return descuento;
     }

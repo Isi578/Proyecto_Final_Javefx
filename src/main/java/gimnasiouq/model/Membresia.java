@@ -25,7 +25,7 @@ public abstract class Membresia {
         this.horaPago = LocalTime.now();
     }
 
-    public Membresia() {
+    public Membresia(String mensual, int i, LocalDate now) {
         this.fechaPago = LocalDate.now();
         this.horaPago = LocalTime.now();
     }
@@ -114,4 +114,5 @@ public abstract class Membresia {
     public String getTipoMembresia() {
         return tipo;
     }
+
 }

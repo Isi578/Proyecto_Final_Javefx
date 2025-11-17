@@ -208,10 +208,10 @@ public class AdminControlAccesoViewController {
     }
 
     private void limpiarInformacionUsuario() {
-        lbNombreEncontrado.setText("-");
-        lbMembresiaEncontrada.setText("-");
-        lbFechaVencimientoEncontrado.setText("-");
-        lbMembresiaActivaNoActiva.setText("-");
+        lbNombreEncontrado.setText("Valide la identificación");
+        lbMembresiaEncontrada.setText("Valide la identificación");
+        lbFechaVencimientoEncontrado.setText("Valide la identificación");
+        lbMembresiaActivaNoActiva.setText("Valide la identificación");
         lbMembresiaActivaNoActiva.setStyle("");
         btnValidarIngreso.setDisable(true);
     }

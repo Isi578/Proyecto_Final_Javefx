@@ -192,7 +192,7 @@ public class Gimnasio {
 
         if (usuario instanceof Estudiante) {
             costo *= 0.90; // 10% de descuento
-        } else if (usuario instanceof Trabajador) {
+        } else if (usuario instanceof Estudiante) {
             costo *= 0.80; // 20% de descuento
         }
 
@@ -351,4 +351,19 @@ public class Gimnasio {
         return listaReservasClases.size();
     }
 
+    public void asignarMembresia(String number, Membresia membresia) {
+    }
+
+    public boolean validarAcceso(String number) {
+        return false;
+    }
+
+    public void registrarEntrenador(Entrenador e) {
+    }
+
+    public void agregarClase(Clase c) {
+    }
+
+    public void asignarEntrenadorAClase(String e1, String c1) {
+    }
 }

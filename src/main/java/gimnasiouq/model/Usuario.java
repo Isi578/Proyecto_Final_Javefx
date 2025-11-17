@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Usuario {
+public class Usuario {
 
     private String nombre;
     private String identificacion;
@@ -15,7 +15,7 @@ public abstract class Usuario {
     private String celular;
     private String tipoMembresia;
     private Membresia membresiaObj;
-    // private final List<ReservaClase> reservas = new ArrayList<>();
+    private final List<ReservaClase> reservas = new ArrayList<>();
 
     public Usuario(String nombre, String identificacion, int edad, String celular, String membresia) {
         this.nombre = nombre;
@@ -29,6 +29,8 @@ public abstract class Usuario {
     public Usuario() {
 
     }
+
+//Get y Set
 
     public String getNombre() {
         return nombre;
@@ -70,9 +72,9 @@ public abstract class Usuario {
         this.tipoMembresia = membresia;
     }
 
-    // public List<ReservaClase> getReservas() {
-    //     return reservas;
-    // }
+    public List<ReservaClase> getReservas() {
+         return reservas;
+    }
 
     public String getTipoMembresia() {
         return tipoMembresia;
@@ -92,6 +94,7 @@ public abstract class Usuario {
             this.tipoMembresia = membresiaObj.getTipo();
         }
     }
+    //Metodos
 
     public Membresia getMembresiaActiva() {
         return membresiaObj;
@@ -175,5 +178,12 @@ public abstract class Usuario {
     @Override
     public int hashCode() {
         return Objects.hash(identificacion);
+    }
+
+    public String getId() {
+
+    }
+
+    public void asignarMembresia(Membresia m) {
     }
 }

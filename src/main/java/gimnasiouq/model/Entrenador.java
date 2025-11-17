@@ -20,7 +20,10 @@ public class Entrenador {
         this.cargo = cargo;
     }
 
-// Getters y Setters
+    public Entrenador(String e1, String daniel, String fuerza) {
+    }
+
+    // Getters y Setters
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getIdentificacion() { return identificacion; }

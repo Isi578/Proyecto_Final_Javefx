@@ -3,6 +3,7 @@ module gimnasiouq {
     requires javafx.fxml;
     requires javafx.base;
     requires java.desktop;
+    requires org.junit.jupiter.api;
 
     opens gimnasiouq to javafx.fxml;
     exports gimnasiouq;

@@ -51,7 +51,6 @@ public class RecepReporteClaseViewController implements Initializable {
     }
 
     private void initDataBinding() {
-
         tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
         tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
         tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));

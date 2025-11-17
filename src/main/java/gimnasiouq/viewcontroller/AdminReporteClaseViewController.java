@@ -51,11 +51,6 @@ public class AdminReporteClaseViewController implements Initializable {
     }
 
     private void initDataBinding() {
-        // Asumo que existe un método en ModelFactory para obtener las reservas.
-        // Si no existe, habría que crearlo.
-        // ObservableList<ReservaClase> listaReservas = modelFactory.obtenerReservasObservable();
-        // tableClases.setItems(listaReservas);
-
         tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
         tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
         tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
