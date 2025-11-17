@@ -1,9 +1,8 @@
 package gimnasiouq.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
 
 // Clase principal del modelo que gestiona todas las listas de datos.
 public class Gimnasio {
@@ -12,6 +11,7 @@ public class Gimnasio {
     private List<Administrador> listaAdministrador;
     private List<Entrenador> listaEntrenador;
     private List<ControlAcceso> listaRegistrosAcceso;
+    private List<ReservaClase> listaReservasClases;
 
 //constructor
     public Gimnasio() {
@@ -20,6 +20,7 @@ public class Gimnasio {
         this.listaAdministrador = new ArrayList<>();
         this.listaEntrenador = new ArrayList<>();
         this.listaRegistrosAcceso = new ArrayList<>();
+        this.listaReservasClases = new ArrayList<>();
     }
 
 //get y set
@@ -56,6 +57,13 @@ public class Gimnasio {
     }
     public void setListaRegistrosAcceso(List<ControlAcceso> listaRegistrosAcceso) {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
+    }
+
+    public List<ReservaClase> getListaReservaClases() {
+        return listaReservaClases;
+    }
+    public void setListaReservasClases (List<ReservaClase> listaReservasClases){
+        this.listaReservasClases = listaReservasClases;
     }
     
 //crud del usuario
@@ -238,5 +246,100 @@ public class Gimnasio {
 
 //CRUD de control de acceso
 
+//metodo para registrar el ingreso del usuario
+    ControlAcceso registro = new ControlAcceso(
+            LocalDate.now(),
+            LocalTime.now(),
+            u.getNombre(),
+            u.getIdentificacion(),
+            u.getTipoMembresia(),
+            u.getEstadoMembresia()
+    );
+        return agregarRegistroAcceso(registro);
+}
+//metodo para verificar acceso al spa
+    public boolean puedeAccederSpa(String identificacion) {
+        Usuario usuario = buscarUsuarioPorIdentificacion(identificacion);
+        if (usuario == null || usuario.getMembresiaActiva() == null) {
+            return false;
+        }
+        return "VIP".equalsIgnoreCase(usuario.getMembresiaActiva().getTipo());
+    }
+
+//metodo para buscar el ingreso del usuario por identificacion
+    public boolean validarIngresoUsuario(String identificacion) {
+        Usuario u = buscarUsuarioPorIdentificacion(identificacion);
+        return u != null && u.tieneMembresiaActiva();
+    }
+
+//metodo para registrar el ingreso del usuario
+    public boolean registrarIngresoUsuario(String identificacion) {
+        Usuario u = buscarUsuarioPorIdentificacion(identificacion);
+        if (u == null || !u.tieneMembresiaActiva()) {
+            return false;
+        }
+
+//metodo para validar la membresia
+    public boolean validarMembresia(Membresia membresia) {
+        if (membresia == null) return false;
+        if (membresia.getInicio() == null || membresia.getFin() == null) return false;
+        if (membresia.getInicio().isAfter(membresia.getFin())) return false;
+        if (membresia.getCosto() < 0) return false;
+        return true;
+    }
+//CRUD de reportes
+
+//metodo para contar el total deusuarios
+    public int contarTotalUsuarios() {
+        return listaUsuarios.size();
+    }
+
+//metodo para contar membresias activas
+    public int contarMembresiasUsuariosActivas() {
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+//metodo para contar membresuas inactivas
+    public int contarMembresiasUsuariosInactivas() {
+        int count = 0;
+        for (Usuario u : listaUsuarios) {
+            if (u.getMembresiaActiva() == null) {
+                count++;
+            }
+        }
+        return count;
+    }
+//metodo para contar la clase mas reservada
+    public String contarClaseMasReservada() {
+        if (listaReservasClases.isEmpty()) {
+            return "Ninguna";
+        }
+        Map<String, Integer> conteoClases = new HashMap<>();
+        for (ReservaClase reserva : listaReservasClases) {
+            String clase = reserva.getClase();
+            conteoClases.put(clase, conteoClases.getOrDefault(clase, 0) + 1);
+        }
+
+        String claseMasReservada = null;
+        int maxReservas = 0;
+        for (Map.Entry<String, Integer> entry : conteoClases.entrySet()) {
+            if (entry.getValue() > maxReservas) {
+                maxReservas = entry.getValue();
+                claseMasReservada = entry.getKey();
+            }
+        }
+        return claseMasReservada;
+    }
+
+//metodo para contar el total de clases reservadas
+    public int contarTotalClasesReservadas() {
+        return listaReservasClases.size();
+    }
 
 }
