@@ -20,6 +20,7 @@ public abstract class Membresia {
         this.inicio = inicio;
         this.fin = fin;
         this.activa = activa;
+        this.accesoGym = accesoGym;
         this.fechaPago = LocalDate.now();
         this.horaPago = LocalTime.now();
     }
@@ -109,4 +110,8 @@ public abstract class Membresia {
     }
 //metodo para obtener los beneficios de la membresia
     public abstract String obtenerBeneficios();
+
+    public String getTipoMembresia() {
+        return tipo;
+    }
 }

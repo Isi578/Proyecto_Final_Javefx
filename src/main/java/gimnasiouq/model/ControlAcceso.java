@@ -1,44 +1,55 @@
 package gimnasiouq.model;
-//atributos
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class ControlAcceso {
-    private Usuario usuario;
-    private String fecha;
-    private String hora;
+    private LocalDate fecha;
+    private LocalTime hora;
+    private String nombre;
+    private String identificacion;
     private String tipoMembresia;
     private boolean estado;
 
-//cosntructor
-    public ControlAcceso(Usuario usuario, String fecha, String hora, String tipoMembresia, boolean estado) {
-        this.usuario = usuario;
+    public ControlAcceso(LocalDate fecha, LocalTime hora, String nombre, String identificacion, String tipoMembresia, boolean estado) {
         this.fecha = fecha;
         this.hora = hora;
+        this.nombre = nombre;
+        this.identificacion = identificacion;
         this.tipoMembresia = tipoMembresia;
         this.estado = estado;
     }
 
-//get y set
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    public String getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 
     public String getTipoMembresia() {
@@ -49,7 +60,7 @@ public class ControlAcceso {
         this.tipoMembresia = tipoMembresia;
     }
 
-    public boolean getEstado() {
+    public boolean isEstado() {
         return estado;
     }
 
@@ -57,13 +68,13 @@ public class ControlAcceso {
         this.estado = estado;
     }
 
-
     @Override
     public String toString() {
         return "ControlAcceso{" +
-                "usuario=" + usuario +
-                ", fecha='" + fecha + '\'' +
-                ", hora='" + hora + '\'' +
+                "fecha=" + fecha +
+                ", hora=" + hora +
+                ", nombre='" + nombre + '\'' +
+                ", identificacion='" + identificacion + '\'' +
                 ", tipoMembresia='" + tipoMembresia + '\'' +
                 ", estado=" + estado +
                 '}';

@@ -1,85 +1,68 @@
 package gimnasiouq.viewcontroller;
 
 import gimnasiouq.factory.ModelFactory;
-import gimnasiouq.model.Gimnasio;
 import gimnasiouq.model.ReservaClase;
-import gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
-public class RecepReporteClaseViewController {
+import java.net.URL;
+import java.util.ResourceBundle;
 
-        @FXML
-        private Label lbClaseMasReservada;
+public class RecepReporteClaseViewController implements Initializable {
 
-        @FXML
-        private Label lbTotalClasesReversadas;
+    private ModelFactory modelFactory;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcClase;
+    @FXML
+    private Label lblClaseMasReservada;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcCupoMaximo;
+    @FXML
+    private Label lblTotalClasesReservadas;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcEntrenador;
+    @FXML
+    private TableView<ReservaClase> tableClases;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcFecha;
+    @FXML
+    private TableColumn<ReservaClase, String> tcClase;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcHorario;
+    @FXML
+    private TableColumn<ReservaClase, String> tcCupoMaximo;
 
-        @FXML
-        private TableColumn<ReservaClase, String> tcIdUsuario;
+    @FXML
+    private TableColumn<ReservaClase, String> tcEntrenador;
 
-        @FXML
-        void initialize() {
-            initView();
-            cargarIndicadores();
-        }
+    @FXML
+    private TableColumn<ReservaClase, String> tcFecha;
 
-        private void initView() {
-            initDataBinding();
-            if (tableView != null) {
-                ObservableList<ReservaClase> listaReservaClases = ModelFactory.getInstance().obtenerReservasObservable();
-                tableView.setItems(listaReservaClases);
-            }
-        }
+    @FXML
+    private TableColumn<ReservaClase, String> tcHorario;
 
-        private void initDataBinding() {
-            if (tcClase != null) {
-                tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
-            }
-            if (tcHorario != null) {
-                tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
-            }
-            if (tcFecha != null) {
-                tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
-            }
-            if (tcEntrenador != null) {
-                tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
-            }
-            if (tcIdUsuario != null) {
-                tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-            }
-            if (tcNombreUsuario != null) {
-                tcNombreUsuario.setCellValueFactory(cellData -> {
-                    Usuario u = ModelFactory.getInstance().buscarUsuario(cellData.getValue().getIdentificacion());
-                    return new SimpleStringProperty(u != null ? u.getNombre() : "Desconocido");
-                });
-            }
-        }
+    @FXML
+    private TableColumn<ReservaClase, String> tcIdUsuario;
 
-        private final Gimnasio gimnasio = new Gimnasio();
-
-        private void cargarIndicadores() {
-            if (lblClaseMasReservada != null)
-                lblClaseMasReservada.textProperty().bind(reportesClasesController.claseMasReservadaProperty());
-            if (lblTotalClasesReservadas != null)
-                lblTotalClasesReservadas.textProperty().bind(reportesClasesController.totalClasesReservadasProperty().asString());
-        }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        modelFactory = ModelFactory.getInstance();
+        initDataBinding();
+        initIndicadores();
     }
+
+    private void initDataBinding() {
+
+        tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
+        tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
+        tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
+        tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
+        tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcCupoMaximo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCupoMaximo())));
+    }
+
+    private void initIndicadores() {
+        modelFactory.actualizarReportes(); // Asegura que los datos estén frescos
+        lblClaseMasReservada.textProperty().bind(modelFactory.claseMasReservadaProperty());
+        lblTotalClasesReservadas.textProperty().bind(modelFactory.totalClasesReservadasProperty().asString());
+    }
+}

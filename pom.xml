@@ -26,13 +26,6 @@
             <version>21.0.6</version>
         </dependency>
 
-        <!-- DEPENDENCIA AÑADIDA PARA GLUON GLISTEN -->
-        <dependency>
-            <groupId>com.gluonhq</groupId>
-            <artifactId>charm-glisten</artifactId>
-            <version>6.2.2</version>
-        </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

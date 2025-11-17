@@ -1,88 +1,77 @@
 package gimnasiouq.viewcontroller;
 
-import gimnasiouq.model.ReservaClase;
+import gimnasiouq.factory.ModelFactory;
+import gimnasiouq.model.Estudiante;
+import gimnasiouq.model.Trabajador;
+import gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AdminReporteUsuarioViewController {
+public class AdminReporteUsuarioViewController implements Initializable {
+
+    private ModelFactory modelFactory;
 
     @FXML
-    private Label lblUsuariosActivos;
+    private Label lblTotalUsuarios;
 
     @FXML
-    private Label lblUsuariosConMensualidadActiva;
+    private Label lblMembresiasActivas;
 
     @FXML
-    private Label lblUsuariosSinMensualidadActiva;
+    private Label lblMembresiasInactivas;
 
     @FXML
-    private TableColumn<ReservaClase, String> tcEstado;
+    private TableView<Usuario> tableUsuarios;
 
     @FXML
-    private TableColumn<ReservaClase, String> tcIdentificacion;
+    private TableColumn<Usuario, String> tcEstado;
 
     @FXML
-    private TableColumn<ReservaClase, String> tcNombre;
+    private TableColumn<Usuario, String> tcIdentificacion;
 
     @FXML
-    private TableColumn<ReservaClase, String> tcUsuario;
+    private TableColumn<Usuario, String> tcNombre;
 
-    ObservableList<Usuario> listaUsuarios;
-    private final ReportesUsuariosController reportesUsuariosController = new ReportesUsuariosController();
+    @FXML
+    private TableColumn<Usuario, String> tcUsuario;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initView();
-        cargarIndicadores();
-    }
-
-    private void initView() {
+        modelFactory = ModelFactory.getInstance();
         initDataBinding();
-        listaUsuarios = ModelFactory.getInstance().obtenerUsuariosObservable();
-        listaUsuarios.addListener((ListChangeListener.Change<? extends Usuario> change) -> {
-            cargarIndicadores();
-            tableView.refresh();
-        });
-        tableView.setItems(listaUsuarios);
-
+        initIndicadores();
     }
 
     private void initDataBinding() {
-        if (tcEstado != null) {
-            tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
-        }
-        if (tcIdentificacion != null) {
-            tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        }
-        if (tcNombre != null) {
-            tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        }
-        if (tcUsuario != null) {
-            tcUsuario.setCellValueFactory(cellData -> {
-                if (cellData.getValue() instanceof Estudiante) {
-                    return new SimpleStringProperty("Estudiante");
-                } else if (cellData.getValue() instanceof TrabajadorUQ) {
-                    return new SimpleStringProperty("Trabajador UQ");
-                } else {
-                    return new SimpleStringProperty("Externo");
-                }
-            });
-        }
+        ObservableList<Usuario> listaUsuarios = modelFactory.obtenerUsuariosObservable();
+        tableUsuarios.setItems(listaUsuarios);
+
+        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcUsuario.setCellValueFactory(cellData -> {
+            if (cellData.getValue() instanceof Estudiante) {
+                return new SimpleStringProperty("Estudiante");
+            } else if (cellData.getValue() instanceof Trabajador) {
+                return new SimpleStringProperty("Trabajador UQ");
+            } else {
+                return new SimpleStringProperty("Externo");
+            }
+        });
     }
 
-    private void cargarIndicadores() {
-        if (lblUsuariosMensualidadActiva != null)
-            lblUsuariosMensualidadActiva.textProperty().bind(reportesUsuariosController.usuariosMembresiaActivasProperty().asString());
-        if (lblUsuariosSinMensualidadActiva != null)
-            lblUsuariosSinMensualidadActiva.textProperty().bind(reportesUsuariosController.usuariosMembresiaInactivasProperty().asString());
-        if (lblUsuariosActivos != null)
-            lblUsuariosActivos.textProperty().bind(reportesUsuariosController.usuariosTotalesProperty().asString());
+    private void initIndicadores() {
+        modelFactory.actualizarReportes(); // Asegura que los datos estén frescos
+        lblTotalUsuarios.textProperty().bind(modelFactory.totalUsuariosProperty().asString());
+        lblMembresiasActivas.textProperty().bind(modelFactory.membresiasActivasProperty().asString());
+        lblMembresiasInactivas.textProperty().bind(modelFactory.membresiasInactivasProperty().asString());
     }
 }

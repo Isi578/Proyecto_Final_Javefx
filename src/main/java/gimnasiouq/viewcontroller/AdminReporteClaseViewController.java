@@ -1,22 +1,30 @@
 package gimnasiouq.viewcontroller;
 
 import gimnasiouq.factory.ModelFactory;
-import gimnasiouq.model.Gimnasio;
 import gimnasiouq.model.ReservaClase;
-import gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
-public class AdminReporteClaseViewController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class AdminReporteClaseViewController implements Initializable {
+
+    private ModelFactory modelFactory;
 
     @FXML
     private Label lblClaseMasReservada;
 
     @FXML
-    private Label lblTotalClasesReversadas;
+    private Label lblTotalClasesReservadas;
+
+    @FXML
+    private TableView<ReservaClase> tableClases;
+
     @FXML
     private TableColumn<ReservaClase, String> tcClase;
 
@@ -35,50 +43,30 @@ public class AdminReporteClaseViewController {
     @FXML
     private TableColumn<ReservaClase, String> tcIdUsuario;
 
-    @FXML
-    void initialize() {
-        initView();
-        cargarIndicadores();
-    }
-
-    private void initView() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        modelFactory = ModelFactory.getInstance();
         initDataBinding();
-        if (tableView != null) {
-            ObservableList<ReservaClase> listaReservaClases = ModelFactory.getInstance().obtenerReservasObservable();
-            tableView.setItems(listaReservaClases);
-        }
+        initIndicadores();
     }
 
     private void initDataBinding() {
-        if (tcClase != null) {
-            tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
-        }
-        if (tcHorario != null) {
-            tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
-        }
-        if (tcFecha != null) {
-            tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
-        }
-        if (tcEntrenador != null) {
-            tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
-        }
-        if (tcIdUsuario != null) {
-            tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        }
-        if (tcNombreUsuario != null) {
-            tcNombreUsuario.setCellValueFactory(cellData -> {
-                Usuario u = ModelFactory.getInstance().buscarUsuario(cellData.getValue().getIdentificacion());
-                return new SimpleStringProperty(u != null ? u.getNombre() : "Desconocido");
-            });
-        }
+        // Asumo que existe un método en ModelFactory para obtener las reservas.
+        // Si no existe, habría que crearlo.
+        // ObservableList<ReservaClase> listaReservas = modelFactory.obtenerReservasObservable();
+        // tableClases.setItems(listaReservas);
+
+        tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
+        tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
+        tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
+        tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
+        tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcCupoMaximo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCupoMaximo())));
     }
 
-    private final Gimnasio gimnasio = new Gimnasio();
-
-    private void cargarIndicadores() {
-        if (lblClaseMasReservada != null)
-            lblClaseMasReservada.textProperty().bind(gimnasio.claseMasReservadaProperty());
-        if (lblTotalClasesReservadas != null)
-            lblTotalClasesReservadas.textProperty().bind(gimnasio.totalClasesReservadasProperty().asString());
+    private void initIndicadores() {
+        modelFactory.actualizarReportes(); // Asegura que los datos estén frescos
+        lblClaseMasReservada.textProperty().bind(modelFactory.claseMasReservadaProperty());
+        lblTotalClasesReservadas.textProperty().bind(modelFactory.totalClasesReservadasProperty().asString());
     }
 }

@@ -1,5 +1,6 @@
 package gimnasiouq.viewcontroller;
 
+import gimnasiouq.factory.ModelFactory;
 import gimnasiouq.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -10,11 +11,11 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Optional;
 
 public class AdminControlAccesoViewController {
+    private ModelFactory modelFactory;
     private Usuario usuarioActual;
-    private Gimnasio gimnasio = new Gimnasio();
     private ObservableList<ControlAcceso> listaRegistros;
 
     @FXML
@@ -30,13 +31,16 @@ public class AdminControlAccesoViewController {
     private Label lbFechaVencimientoEncontrado;
 
     @FXML
-    private Separator lbMembresiaActivaNoActiva;
+    private Label lbMembresiaActivaNoActiva;
 
     @FXML
     private Label lbMembresiaEncontrada;
 
     @FXML
     private Label lbNombreEncontrado;
+
+    @FXML
+    private TableView<ControlAcceso> tableRegistros;
 
     @FXML
     private TableColumn<ControlAcceso, String> tcEstado;
@@ -62,110 +66,78 @@ public class AdminControlAccesoViewController {
     @FXML
     private TextField txtIdentificacion;
 
-
-    private ControlAccesoController controlAccesoController = new ControlAccesoController();
-    private ObservableList<ControlAcceso> listaRegistros;
-    private Usuario usuarioActual;
-
     @FXML
     void initialize() {
+        modelFactory = ModelFactory.getInstance();
         btnValidarIngreso.setDisable(true);
 
         initDataBinding();
-        listaRegistros = controlAccesoController.obtenerRegistrosObservable();
-        tableUsuario.setItems(listaRegistros);
+        listaRegistros = modelFactory.obtenerRegistrosObservable();
+        tableRegistros.setItems(listaRegistros);
 
         limpiarInformacionUsuario();
     }
 
     private void initDataBinding() {
-        if (tcNombre != null) {
-            tcNombre.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getUsuario()));
-        }
+        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        tcHora.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHora().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isEstado() ? "ACTIVA" : "INACTIVA"));
 
-        if (tcIdentificacion != null) {
-            tcIdentificacion.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        }
-
-        if (tcTipoMembresia != null) {
-            tcTipoMembresia.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
-        }
-
-        if (tcFecha != null) {
-            tcFecha.setCellValueFactory(cellData -> {
-                LocalDate fecha = cellData.getValue().getFecha();
-                return new SimpleStringProperty(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            });
-        }
-
-        if (tcHora != null) {
-            tcHora.setCellValueFactory(cellData -> {
-                LocalTime hora = cellData.getValue().getHora();
-                return new SimpleStringProperty(hora.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            });
-        }
-
-        if (tcEstado != null) {
-            tcEstado.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getEstado()));
-
-            tcEstado.setCellFactory(column -> new TableCell<ControlAcceso, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                        setStyle("");
+        tcEstado.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if ("ACTIVA".equals(item)) {
+                        setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
                     } else {
-                        setText(item);
-                        if ("ACTIVA".equals(item)) {
-                            setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-                        } else {
-                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                        }
+                        setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     }
                 }
-            });
-        }
+            }
+        });
 
-        if (tcUsuario != null) {
-            tcUsuario.setCellValueFactory(cellData -> {
-                String id = cellData.getValue().getIdentificacion();
-                if (id == null) return new SimpleStringProperty("N/A");
+        // El tipo de usuario no está en ControlAcceso, así que lo buscamos.
+        // Esto es aceptable si el tipo de usuario no cambia.
+        tcUsuario.setCellValueFactory(cellData -> {
+            String id = cellData.getValue().getIdentificacion();
+            if (id == null) return new SimpleStringProperty("N/A");
 
-                Usuario usuario = ModelFactory.getInstance().buscarUsuario(id);
-                if (usuario == null) return new SimpleStringProperty("Desconocido");
+            Optional<Usuario> usuario = modelFactory.buscarUsuario(id);
+            if (usuario.isEmpty()) return new SimpleStringProperty("Desconocido");
 
-                if (usuario instanceof Estudiante) {
-                    return new SimpleStringProperty("Estudiante");
-                } else if (usuario instanceof TrabajadorUQ) {
-                    return new SimpleStringProperty("Trabajador UQ");
-                } else {
-                    return new SimpleStringProperty("Externo");
-                }
-            });
-        }
+            if (usuario.get() instanceof Estudiante) {
+                return new SimpleStringProperty("Estudiante");
+            } else if (usuario.get() instanceof Trabajador) {
+                return new SimpleStringProperty("Trabajador UQ");
+            } else {
+                return new SimpleStringProperty("Externo");
+            }
+        });
     }
 
     @FXML
     void onBuscarUsuario(ActionEvent event) {
-        String identificacion = txtfieldIdentificacion.getText();
+        String identificacion = txtIdentificacion.getText();
 
         if (identificacion == null || identificacion.trim().isEmpty()) {
             mostrarAlerta("Error", "Ingrese una identificación", Alert.AlertType.WARNING);
             return;
         }
 
-        Usuario usuario = controlAccesoController.buscarUsuario(identificacion.trim());
+        Optional<Usuario> usuario = modelFactory.buscarUsuario(identificacion.trim());
 
-        if (usuario != null) {
-            usuarioActual = usuario;
-            actualizarInformacionUsuario(usuario);
-
-            btnValidarIngreso.setDisable(!usuario.tieneMembresiaActiva());
+        if (usuario.isPresent()) {
+            usuarioActual = usuario.get();
+            actualizarInformacionUsuario(usuarioActual);
+            btnValidarIngreso.setDisable(!usuarioActual.tieneMembresiaActiva());
         } else {
             limpiarInformacionUsuario();
             mostrarAlerta("Usuario no encontrado",
@@ -181,14 +153,14 @@ public class AdminControlAccesoViewController {
             return;
         }
 
-        if (!controlAccesoController.validarIngreso(usuarioActual.getIdentificacion())) {
+        if (!modelFactory.validarIngresoUsuario(usuarioActual.getIdentificacion())) {
             mostrarAlerta("Membresía Inactiva",
                     "El usuario no puede ingresar. Membresía NO ACTIVA.",
                     Alert.AlertType.ERROR);
             return;
         }
 
-        boolean ok = controlAccesoController.registrarIngreso(usuarioActual.getIdentificacion());
+        boolean ok = modelFactory.registrarIngresoUsuario(usuarioActual.getIdentificacion());
         if (ok) {
             mostrarAlerta("Ingreso Validado",
                     "Acceso registrado exitosamente para " + usuarioActual.getNombre(),
@@ -201,10 +173,10 @@ public class AdminControlAccesoViewController {
 
     @FXML
     void onEliminar(ActionEvent event) {
-        ControlAcceso registroSeleccionado = tableUsuario.getSelectionModel().getSelectedItem();
+        ControlAcceso registroSeleccionado = tableRegistros.getSelectionModel().getSelectedItem();
 
         if (registroSeleccionado != null) {
-            boolean ok = controlAccesoController.eliminarRegistro(registroSeleccionado);
+            boolean ok = modelFactory.eliminarRegistro(registroSeleccionado);
             if (ok) {
                 mostrarAlerta("Registro eliminado", "El registro ha sido eliminado", Alert.AlertType.INFORMATION);
             } else {
@@ -216,33 +188,41 @@ public class AdminControlAccesoViewController {
     }
 
     private void actualizarInformacionUsuario(Usuario usuario) {
-        lblNombreEncontrado.setText(usuario.getNombre());
-        lblMembresiaEncontrada.setText(usuario.getTipoMembresia());
-        lblFechaVencimientoEncontrada.setText(usuario.getFechaFinFormateada());
-
-        String estado = usuario.getEstadoMembresia();
-        lblMembresiaActivaNoActiva.setText(estado);
-
-        if ("ACTIVA".equals(estado)) {
-            lblMembresiaActivaNoActiva.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+        lbNombreEncontrado.setText(usuario.getNombre());
+        if (usuario.getMembresiaObj() != null) {
+            lbMembresiaEncontrada.setText(usuario.getMembresiaObj().getTipoMembresia());
+            lbFechaVencimientoEncontrado.setText(usuario.getMembresiaObj().getFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            String estado = usuario.getMembresiaObj().isActiva() ? "ACTIVA" : "INACTIVA";
+            lbMembresiaActivaNoActiva.setText(estado);
+            if ("ACTIVA".equals(estado)) {
+                lbMembresiaActivaNoActiva.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            } else {
+                lbMembresiaActivaNoActiva.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            }
         } else {
-            lblMembresiaActivaNoActiva.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            lbMembresiaEncontrada.setText("N/A");
+            lbFechaVencimientoEncontrado.setText("N/A");
+            lbMembresiaActivaNoActiva.setText("SIN MEMBRESIA");
+            lbMembresiaActivaNoActiva.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
     }
 
     private void limpiarInformacionUsuario() {
-        lblNombreEncontrado.setText("-");
-        lblMembresiaEncontrada.setText("-");
-        lblFechaVencimientoEncontrada.setText("-");
-        lblMembresiaActivaNoActiva.setText("-");
-        lblMembresiaActivaNoActiva.setStyle("");
+        lbNombreEncontrado.setText("-");
+        lbMembresiaEncontrada.setText("-");
+        lbFechaVencimientoEncontrado.setText("-");
+        lbMembresiaActivaNoActiva.setText("-");
+        lbMembresiaActivaNoActiva.setStyle("");
+        btnValidarIngreso.setDisable(true);
     }
 
+
+
     private void limpiarFormulario() {
-        txtfieldIdentificacion.clear();
+        txtIdentificacion.clear();
         limpiarInformacionUsuario();
         usuarioActual = null;
-        btnValidarIngreso.setDisable(true);
+    }
 
     private void mostrarAlerta(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);

@@ -59,13 +59,13 @@ public class Gimnasio {
         this.listaRegistrosAcceso = listaRegistrosAcceso;
     }
 
-    public List<ReservaClase> getListaReservaClases() {
-        return listaReservaClases;
+    public List<ReservaClase> getListaReservasClases() {
+        return listaReservasClases;
     }
     public void setListaReservasClases (List<ReservaClase> listaReservasClases){
         this.listaReservasClases = listaReservasClases;
     }
-    
+
 //crud del usuario
 
 // metodo para verificar exixstencia de usuario
@@ -85,6 +85,10 @@ public class Gimnasio {
 //metodo para buscar usuario con id
     public Optional<Usuario> buscarUsuario(String id) {
         return listaUsuarios.stream().filter(u -> u.getIdentificacion().equals(id)).findFirst();
+    }
+
+    public Usuario buscarUsuarioPorIdentificacion(String identificacion) {
+        return buscarUsuario(identificacion).orElse(null);
     }
 
 //metodo para actualizar el ususario con el id
@@ -109,7 +113,7 @@ public class Gimnasio {
 
 //crud de la membresia
 
-//metodo para asignar membresia a un usuario   
+//metodo para asignar membresia a un usuario
     public Usuario asignarMembresiaUsuario(String usuarioId, Membresia membresia) throws Exception {
         Usuario usuario = buscarUsuario(usuarioId)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + usuarioId));
@@ -121,15 +125,15 @@ public class Gimnasio {
     public Usuario actualizarMembresiaUsuario(String usuarioId, Membresia membresia) throws Exception {
         return asignarMembresiaUsuario(usuarioId, membresia);
     }
-    
-//metodo para eliminar una membresia    
+
+//metodo para eliminar una membresia
     public Usuario eliminarMembresiaUsuario(String usuarioId) throws Exception {
         Usuario usuario = buscarUsuario(usuarioId)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + usuarioId));
         usuario.setMembresiaObj(null);
         return usuario;
     }
-    
+
 //metodo para obtener la membresia de un usuario
     public Optional<Membresia> obtenerMembresiaUsuario(String usuarioId) throws Exception {
         Usuario usuario = buscarUsuario(usuarioId)
@@ -246,24 +250,17 @@ public class Gimnasio {
 
 //CRUD de control de acceso
 
-//metodo para registrar el ingreso del usuario
-    ControlAcceso registro = new ControlAcceso(
-            LocalDate.now(),
-            LocalTime.now(),
-            u.getNombre(),
-            u.getIdentificacion(),
-            u.getTipoMembresia(),
-            u.getEstadoMembresia()
-    );
-        return agregarRegistroAcceso(registro);
-}
+    public boolean agregarRegistroAcceso(ControlAcceso registro) {
+        return listaRegistrosAcceso.add(registro);
+    }
+
 //metodo para verificar acceso al spa
     public boolean puedeAccederSpa(String identificacion) {
         Usuario usuario = buscarUsuarioPorIdentificacion(identificacion);
-        if (usuario == null || usuario.getMembresiaActiva() == null) {
+        if (usuario == null || usuario.getMembresiaObj() == null) {
             return false;
         }
-        return "VIP".equalsIgnoreCase(usuario.getMembresiaActiva().getTipo());
+        return "VIP".equalsIgnoreCase(usuario.getMembresiaObj().getTipoMembresia());
     }
 
 //metodo para buscar el ingreso del usuario por identificacion
@@ -278,6 +275,17 @@ public class Gimnasio {
         if (u == null || !u.tieneMembresiaActiva()) {
             return false;
         }
+        Membresia membresia = u.getMembresiaObj();
+        ControlAcceso registro = new ControlAcceso(
+                LocalDate.now(),
+                LocalTime.now(),
+                u.getNombre(),
+                u.getIdentificacion(),
+                membresia != null ? membresia.getTipoMembresia() : "N/A",
+                membresia != null && membresia.isActiva()
+        );
+        return agregarRegistroAcceso(registro);
+    }
 
 //metodo para validar la membresia
     public boolean validarMembresia(Membresia membresia) {
@@ -294,27 +302,28 @@ public class Gimnasio {
         return listaUsuarios.size();
     }
 
+    public int contarTotalMembresias() {
+        return (int) listaUsuarios.stream().filter(u -> u.getMembresiaObj() != null).count();
+    }
+
 //metodo para contar membresias activas
     public int contarMembresiasUsuariosActivas() {
-        int count = 0;
-        for (Usuario u : listaUsuarios) {
-            if (u.getMembresiaActiva() != null) {
-                count++;
-            }
-        }
-        return count;
+        return (int) listaUsuarios.stream().filter(Usuario::tieneMembresiaActiva).count();
     }
 
 //metodo para contar membresuas inactivas
     public int contarMembresiasUsuariosInactivas() {
-        int count = 0;
-        for (Usuario u : listaUsuarios) {
-            if (u.getMembresiaActiva() == null) {
-                count++;
-            }
-        }
-        return count;
+        return (int) listaUsuarios.stream().filter(u -> !u.tieneMembresiaActiva()).count();
     }
+
+    public double calcularIngresosTotales() {
+        return listaUsuarios.stream()
+                .map(Usuario::getMembresiaObj)
+                .filter(Objects::nonNull)
+                .mapToDouble(Membresia::getCosto)
+                .sum();
+    }
+
 //metodo para contar la clase mas reservada
     public String contarClaseMasReservada() {
         if (listaReservasClases.isEmpty()) {

@@ -71,7 +71,17 @@
                             </content>
                         </Tab>
                         <Tab text="Reportes">
-
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="504.0" prefWidth="762.0">
+                                    <children>
+                                        <SplitPane layoutY="7.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="762.0">
+                                            <items>
+                                                <fx:include fx:id="recepcionistaReportes" source="recepReporte.fxml" />
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
                         </Tab>
                         <Tab>
                             <content>
