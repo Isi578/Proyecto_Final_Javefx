@@ -18,7 +18,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class AdminReservaClaseViewController implements Initializable {
 
@@ -71,20 +70,20 @@ public class AdminReservaClaseViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaReservas = gimnasio.getListaReservasClases(); // Obtener la ObservableList directamente del modelo
+        this.listaReservas = FXCollections.observableArrayList(gimnasio.getListaReservasClases());
 
         // Poblar ComboBoxes
-        comboBoxClase.getItems().addAll("Yoga", "Spinning", "Boxeo", "Funcional"); // Añadido Boxeo y Funcional para consistencia
-        comboBoxHorario.getItems().addAll("06:00", "08:00", "16:00", "18:00"); // Horarios consistentes
+        comboBoxClase.getItems().addAll("Yoga", "Spinning", "Boxeo", "Funcional");
+        comboBoxHorario.getItems().addAll("06:00", "08:00", "16:00", "18:00");
         comboBoxEntrenador.getItems().clear();
         comboBoxEntrenador.setDisable(true);
 
         initDataBinding();
-        tableUsuario.setItems(gimnasio.getListaUsuarios()); // Cargar usuarios en la tabla
+        tableUsuario.setItems(FXCollections.observableArrayList(gimnasio.getListaUsuarios()));
         listenerSelection();
         lblBeneficios.setText("Seleccione un usuario");
 
-        cargarEntrenadoresDisponibles(); // Cargar entrenadores inicialmente
+        cargarEntrenadoresDisponibles();
     }
 
     private ReservaClase getReservaForUser(String identificacion) {
@@ -95,7 +94,6 @@ public class AdminReservaClaseViewController implements Initializable {
     }
 
     private void initDataBinding() {
-        // Columnas de Usuario
         if (tcNombre != null) {
             tcNombre.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
         }
@@ -103,7 +101,7 @@ public class AdminReservaClaseViewController implements Initializable {
             tcIdentificacion.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIdentificacion()));
         }
         if (tcTipo != null) {
-            tcTipo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTipoMembresia())); // Usar getTipoMembresia()
+            tcTipo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTipoMembresia()));
         }
         if (tcUsuario != null) {
             tcUsuario.setCellValueFactory(cellData -> {
@@ -173,8 +171,6 @@ public class AdminReservaClaseViewController implements Initializable {
     }
 
     private void cargarEntrenadoresDisponibles() {
-        // La lista de entrenadores se carga una vez y se actualiza al seleccionar un usuario VIP
-        // No se necesita un listener global aquí, la actualización se maneja en prepararEntrenadoresSegunMembresia
     }
 
     private void prepararEntrenadoresSegunMembresia(Usuario usuario) {
@@ -214,14 +210,14 @@ public class AdminReservaClaseViewController implements Initializable {
     }
 
     @FXML
-    void onNuevo(ActionEvent event) {
+    void onNuevo() {
         limpiarCampos();
         tableUsuario.getSelectionModel().clearSelection();
         usuarioSeleccionado = null;
     }
 
     @FXML
-    void onConfirmar(ActionEvent event) {
+    void onConfirmar() {
         if (usuarioSeleccionado == null) {
             mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
             return;
@@ -314,7 +310,7 @@ public class AdminReservaClaseViewController implements Initializable {
 
 
     @FXML
-    void onActualizar(ActionEvent event) {
+    void onActualizar() {
         if (usuarioSeleccionado == null) {
             mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
             return;
@@ -398,7 +394,7 @@ public class AdminReservaClaseViewController implements Initializable {
     }
 
     @FXML
-    void onEliminar(ActionEvent event) {
+    void onEliminar() {
         if (usuarioSeleccionado == null) {
             mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
             return;

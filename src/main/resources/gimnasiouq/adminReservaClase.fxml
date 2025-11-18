@@ -22,7 +22,7 @@
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gestionar Reserva de Clases">
                     <font>
-                        <Font name="Arial Bold" size="25.0" />
+                        <Font name="Times New Roman" size="25.0" />
                     </font>
                 </Text>
                 <Separator prefHeight="18.0" prefWidth="682.0" />
@@ -38,22 +38,34 @@
                         <RowConstraints minHeight="10.0" />
                     </rowConstraints>
                     <children>
-                        <Label text="Clase:" textAlignment="JUSTIFY" />
+                        <Label text="Clase:" textAlignment="JUSTIFY">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <ComboBox fx:id="comboBoxClase" maxWidth="1.7976931348623157E308" promptText="Seleccione una clase" GridPane.columnIndex="1">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin></ComboBox>
-                        <Label text="Horario:" GridPane.columnIndex="2" />
+                        <Label text="Horario:" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <ComboBox fx:id="comboBoxHorario" maxWidth="1.7976931348623157E308" promptText="Seleccione un horario" GridPane.columnIndex="3">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin></ComboBox>
-                        <Label text="Entrenador:" GridPane.rowIndex="1" />
+                        <Label text="Entrenador:" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <ComboBox fx:id="comboBoxEntrenador" maxWidth="1.7976931348623157E308" promptText="Seleccione un entrenador" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin></ComboBox>
-                        <Label text="Fecha" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="Fecha" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                         <TextField fx:id="txtFecha" maxWidth="1.7976931348623157E308" promptText="dd/mm/yyyy" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <GridPane.margin>
                                 <Insets />
@@ -75,8 +87,14 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="lblBeneficios" text="Beneficios" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
-                        <Label prefHeight="18.0" prefWidth="72.0" text="Beneficios:" />
+                        <Label fx:id="lblBeneficios" text="Beneficios" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
+                        <Label prefHeight="18.0" prefWidth="72.0" text="Beneficios:">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Label>
                     </children>
                     <VBox.margin>
                         <Insets />
@@ -94,10 +112,22 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo" />
-                        <Button fx:id="btnConfirmar" mnemonicParsing="false" onAction="#onConfirmar" prefWidth="80.0" text="Confirmar" GridPane.columnIndex="1" />
-                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3" />
-                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar" GridPane.columnIndex="2" />
+                        <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#onNuevo" prefWidth="80.0" text="Nuevo">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnConfirmar" mnemonicParsing="false" onAction="#onConfirmar" prefWidth="80.0" text="Confirmar" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" prefWidth="80.0" text="Eliminar" GridPane.columnIndex="3">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
+                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="Times New Roman" size="12.0" />
+                     </font></Button>
                     </children>
                     <VBox.margin>
                         <Insets />

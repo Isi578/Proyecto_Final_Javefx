@@ -14,13 +14,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class RecepReporteMembresiaViewController implements Initializable {
 
-    private Gimnasio gimnasio;
-    private ObservableList<Usuario> listaUsuarios; // Usaremos la lista de usuarios directamente
+    private ObservableList<Usuario> listaUsuarios;
 
     @FXML
     private Label lblIngresosTotales;
@@ -35,29 +34,29 @@ public class RecepReporteMembresiaViewController implements Initializable {
     private Label lblmembresiasTotales;
 
     @FXML
-    private TableView<Usuario> tableMembresias; // Cambiado a TableView<Usuario>
+    private TableView<Usuario> tableMembresias;
 
     @FXML
-    private TableColumn<Usuario, String> tcCosto; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcCosto;
 
     @FXML
-    private TableColumn<Usuario, String> tcFechaInicio; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcFechaInicio;
 
     @FXML
-    private TableColumn<Usuario, String> tcFechaVencimiento; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcFechaVencimiento;
 
     @FXML
-    private TableColumn<Usuario, String> tcPlanMembresia; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcPlanMembresia;
 
     @FXML
-    private TableColumn<Usuario, String> tcTipoMembresia; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcTipoMembresia;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios(); // Obtener la ObservableList directamente del modelo
+        Gimnasio gimnasio = ModelFactory.getInstance().getGimnasio();
+        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
         initDataBinding();
-        tableMembresias.setItems(listaUsuarios); // Establecer la lista de usuarios directamente en la tabla
+        tableMembresias.setItems(listaUsuarios);
         initIndicadores();
     }
 
@@ -92,7 +91,7 @@ public class RecepReporteMembresiaViewController implements Initializable {
         long membresiasInactivas = totalMembresias - membresiasActivas;
         double ingresosTotales = listaUsuarios.stream()
                 .map(Usuario::getMembresiaObj)
-                .filter(m -> m != null)
+                .filter(Objects::nonNull)
                 .mapToDouble(Membresia::getCosto)
                 .sum();
 

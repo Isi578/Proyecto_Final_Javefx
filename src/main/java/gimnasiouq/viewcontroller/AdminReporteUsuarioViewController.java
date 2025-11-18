@@ -16,13 +16,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminReporteUsuarioViewController implements Initializable {
-
-    private Gimnasio gimnasio;
-    private ObservableList<Usuario> listaUsuarios; // Declarar aquí para usar la referencia directa
 
     @FXML
     private Label lblTotalUsuarios;
@@ -43,18 +39,16 @@ public class AdminReporteUsuarioViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios(); // Obtener la ObservableList directamente del modelo
+        Gimnasio gimnasio = ModelFactory.getInstance().getGimnasio();
+        ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
         initDataBinding();
-        tableUsuarios.setItems(listaUsuarios); // Establecer la lista directamente en la tabla
+        tableUsuarios.setItems(listaUsuarios);
+        initIndicadores(listaUsuarios); // Llamar a initIndicadores y pasar la lista de usuarios
         actualizarReporte();
     }
 
     private void actualizarReporte() {
-        // No es necesario crear una nueva ObservableList aquí, ya estamos usando la del modelo
-        // tableUsuarios.setItems(listaUsuarios); // Ya se hizo en initialize
-        initIndicadores(listaUsuarios); // Pasar la lista directamente
-        tableUsuarios.refresh(); // Refrescar la tabla para asegurar que los datos se muestren
+        tableUsuarios.refresh();
     }
 
     private void initDataBinding() {
@@ -69,7 +63,7 @@ public class AdminReporteUsuarioViewController implements Initializable {
         });
     }
 
-    private void initIndicadores(ObservableList<Usuario> usuarios) { // Cambiar el tipo a ObservableList
+    private void initIndicadores(ObservableList<Usuario> usuarios) {
         // Calcular total de usuarios
         long total = usuarios.size();
 

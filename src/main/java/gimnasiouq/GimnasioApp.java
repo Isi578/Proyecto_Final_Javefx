@@ -17,8 +17,7 @@ public class GimnasioApp extends Application {
     public void start(Stage stage) throws Exception {
         mainStage = stage;
 
-        // Inicializar el ModelFactory para cargar los datos iniciales
-        ModelFactory.getInstance(); 
+        ModelFactory.getInstance();
 
         var loginUrl = GimnasioApp.class.getResource("login.fxml");
         var recepUrl = GimnasioApp.class.getResource("recep.fxml");

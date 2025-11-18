@@ -2,7 +2,6 @@ package gimnasiouq.viewcontroller;
 
 import gimnasiouq.factory.ModelFactory;
 import gimnasiouq.model.Gimnasio;
-import gimnasiouq.model.Membresia;
 import gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,12 +14,8 @@ import javafx.scene.control.TableView;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class AdminReporteMembresiaViewController implements Initializable {
-
-    private Gimnasio gimnasio;
-    private ObservableList<Usuario> listaUsuarios; // Usaremos la lista de usuarios directamente
 
     @FXML
     private Label lblIngresosTotales;
@@ -35,33 +30,33 @@ public class AdminReporteMembresiaViewController implements Initializable {
     private Label lblmembresiasTotales;
 
     @FXML
-    private TableView<Usuario> tableMembresias; // Cambiado a TableView<Usuario>
+    private TableView<Usuario> tableMembresias;
 
     @FXML
-    private TableColumn<Usuario, String> tcCosto; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcCosto;
 
     @FXML
-    private TableColumn<Usuario, String> tcFechaInicio; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcFechaInicio;
 
     @FXML
-    private TableColumn<Usuario, String> tcFechaVencimiento; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcFechaVencimiento;
 
     @FXML
-    private TableColumn<Usuario, String> tcPlanMembresia; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcPlanMembresia;
 
     @FXML
-    private TableColumn<Usuario, String> tcTipoMembresia; // Cambiado a TableColumn<Usuario, String>
+    private TableColumn<Usuario, String> tcTipoMembresia;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios(); // Obtener la ObservableList directamente del modelo
-        initDataBinding();
-        tableMembresias.setItems(listaUsuarios); // Establecer la lista de usuarios directamente en la tabla
-        initIndicadores();
+        Gimnasio gimnasio = ModelFactory.getInstance().getGimnasio();
+        ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
+        initDataBinding(listaUsuarios);
+        tableMembresias.setItems(listaUsuarios);
+        initIndicadores(gimnasio);
     }
 
-    private void initDataBinding() {
+    private void initDataBinding(ObservableList<Usuario> listaUsuarios) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         tcFechaInicio.setCellValueFactory(cellData -> {
@@ -86,19 +81,10 @@ public class AdminReporteMembresiaViewController implements Initializable {
         });
     }
 
-    private void initIndicadores() {
-        long totalMembresias = listaUsuarios.stream().filter(u -> u.getMembresiaObj() != null).count();
-        long membresiasActivas = listaUsuarios.stream().filter(Usuario::tieneMembresiaActiva).count();
-        long membresiasInactivas = totalMembresias - membresiasActivas;
-        double ingresosTotales = listaUsuarios.stream()
-                .map(Usuario::getMembresiaObj)
-                .filter(m -> m != null)
-                .mapToDouble(Membresia::getCosto)
-                .sum();
-
-        lblmembresiasTotales.setText(String.valueOf(totalMembresias));
-        lblmembresiasConValor.setText(String.valueOf(membresiasActivas));
-        lblmembresiasSinValor.setText(String.valueOf(membresiasInactivas));
-        lblIngresosTotales.setText(String.format("$%.0f", ingresosTotales));
+    private void initIndicadores(Gimnasio gimnasio) {
+        lblmembresiasTotales.setText(String.valueOf(gimnasio.contarTotalMembresias()));
+        lblmembresiasConValor.setText(String.valueOf(gimnasio.contarMembresiasUsuariosActivas()));
+        lblmembresiasSinValor.setText(String.valueOf(gimnasio.contarMembresiasUsuariosInactivas()));
+        lblIngresosTotales.setText(String.format("$%.0f", gimnasio.calcularIngresosTotales()));
     }
 }

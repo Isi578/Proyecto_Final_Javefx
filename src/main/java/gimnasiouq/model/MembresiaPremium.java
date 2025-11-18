@@ -6,8 +6,7 @@ import java.time.LocalDate;
 
 //constructor
     public MembresiaPremium(double costo, LocalDate inicio, LocalDate fin) {
-        super("Premium", costo, inicio, fin, true);
-        setAccesoGym(true);
+        super("Premium", costo, inicio, fin, true, true);
     }
 
 //to string

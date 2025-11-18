@@ -156,7 +156,7 @@ public class RecepMembresiaViewController {
             gimnasio.eliminarMembresiaUsuario(usuarioSeleccionado.getIdentificacion());
             mostrarAlerta("Éxito", "Membresía eliminada correctamente.", Alert.AlertType.INFORMATION);
             limpiarCampos();
-            actualizarTabla(); // Refrescar la tabla para mostrar los cambios
+            actualizarTabla();
         } catch (Exception e) {
             mostrarAlerta("Error", "Error al eliminar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -172,15 +172,12 @@ public class RecepMembresiaViewController {
     @FXML
     void initialize() {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios();
+        this.listaUsuarios = (ObservableList<Usuario>) gimnasio.getListaUsuarios();
         initView();
         comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
 
-        // Eliminado: comboBoxTipoMembresia.getItems().addAll("Basica", "Premium", "VIP");
 
-        // Añadir listeners a los ComboBoxes para actualizar los detalles de la membresía
         comboBoxPlanMembresia.valueProperty().addListener((obs, oldVal, newVal) -> updateMembershipDetails());
-        // Eliminado: comboBoxTipoMembresia.valueProperty().addListener((obs, oldVal, newVal) -> updateMembershipDetails());
     }
 
     private void initView() {
@@ -244,7 +241,7 @@ public class RecepMembresiaViewController {
                 (observable, oldValue, newSelection) -> {
                     usuarioSeleccionado = newSelection;
                     mostrarInformacionUsuario(usuarioSeleccionado);
-                    updateMembershipDetails(); // Actualizar detalles cuando se selecciona un usuario
+                    updateMembershipDetails();
                 });
     }
 
@@ -254,8 +251,8 @@ public class RecepMembresiaViewController {
                 Membresia membresia = usuario.getMembresiaObj();
                 txtFechaInicio.setText(membresia.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 txtFechaFin.setText(membresia.getFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                comboBoxPlanMembresia.getSelectionModel().select(membresia.getTipo()); // Esto podría ser el plan o el tipo de membresía, ajusta según tu modelo
-                // Eliminado: comboBoxTipoMembresia.getSelectionModel().select(membresia.getTipo());
+                comboBoxPlanMembresia.getSelectionModel().select(membresia.getTipo());
+
                 txtCosto.setText(String.valueOf(membresia.getCosto()));
             } else {
                 limpiarCampos();
@@ -267,7 +264,6 @@ public class RecepMembresiaViewController {
         txtFechaInicio.setText("");
         txtFechaFin.setText("");
         comboBoxPlanMembresia.getSelectionModel().clearSelection();
-        // Eliminado: comboBoxTipoMembresia.getSelectionModel().clearSelection();
         txtCosto.setText("");
     }
 
@@ -286,7 +282,6 @@ public class RecepMembresiaViewController {
     // Método para actualizar los detalles de la membresía
     private void updateMembershipDetails() {
         String planSeleccionado = comboBoxPlanMembresia.getSelectionModel().getSelectedItem();
-        // String tipoMembresiaSeleccionado = comboBoxTipoMembresia.getSelectionModel().getSelectedItem(); // Eliminado
         String tipoMembresiaSeleccionado = (usuarioSeleccionado != null) ? usuarioSeleccionado.getTipoMembresia() : null; // Obtener del usuario seleccionado
 
         if (usuarioSeleccionado != null && planSeleccionado != null && tipoMembresiaSeleccionado != null) {

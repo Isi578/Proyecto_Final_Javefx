@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ModelFactory {
     private Gimnasio gimnasio;
@@ -27,20 +28,38 @@ public class ModelFactory {
         return gimnasio;
     }
 
-    // Métodos eliminados:
-    // public ObservableList<Usuario> obtenerUsuariosObservable() {
-    //     return gimnasio.getListaUsuarios();
-    // }
-    //
-    // public ObservableList<Entrenador> obtenerEntrenadorObservable() {
-    //     return FXCollections.observableArrayList(gimnasio.getListaEntrenador());
-    // }
+     public ObservableList<Usuario> obtenerUsuariosObservable() {
+         return FXCollections.observableArrayList(gimnasio.getListaUsuarios());
+     }
+
+    public ObservableList<Entrenador> obtenerEntrenadorObservable() {
+        return FXCollections.observableArrayList(gimnasio.getListaEntrenador());
+     }
 
     public List<Entrenador> obtenerEntrenadores() {
         return gimnasio.getListaEntrenador();
     }
 
+    public ObservableList<ControlAcceso> obtenerRegistrosObservable() {
+        return FXCollections.observableArrayList(gimnasio.getListaRegistrosAcceso());
+    }
+
+    public boolean eliminarRegistro(ControlAcceso registro) {
+        return gimnasio.getListaRegistrosAcceso().remove(registro);
+    }
+
+    public Optional<Usuario> buscarUsuario(String id) {
+        return gimnasio.buscarUsuario(id);
+    }
+
+    public boolean validarIngresoUsuario(String identificacion) {
+        return gimnasio.validarIngresoUsuario(identificacion);
+    }
+
+    public boolean registrarIngresoUsuario(String identificacion) {
+        return gimnasio.registrarIngresoUsuario(identificacion);
+    }
+
     public void actualizarReportes() {
-        // Lógica para actualizar reportes si es necesario
     }
 }

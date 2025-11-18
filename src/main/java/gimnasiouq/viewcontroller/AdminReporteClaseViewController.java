@@ -1,8 +1,10 @@
 package gimnasiouq.viewcontroller;
 
 import gimnasiouq.factory.ModelFactory;
+import gimnasiouq.model.Gimnasio;
 import gimnasiouq.model.ReservaClase;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -46,8 +48,10 @@ public class AdminReporteClaseViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         modelFactory = ModelFactory.getInstance();
+        Gimnasio gimnasio = modelFactory.getGimnasio(); // Hacemos gimnasio una variable local
         initDataBinding();
-        initIndicadores();
+        initIndicadores(gimnasio); // Pasamos gimnasio como parámetro
+        tableClases.setItems(FXCollections.observableArrayList(gimnasio.getListaReservasClases()));
     }
 
     private void initDataBinding() {
@@ -59,9 +63,8 @@ public class AdminReporteClaseViewController implements Initializable {
         tcCupoMaximo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCupoMaximo())));
     }
 
-    private void initIndicadores() {
-        modelFactory.actualizarReportes(); // Asegura que los datos estén frescos
-        lblClaseMasReservada.textProperty().bind(modelFactory.claseMasReservadaProperty());
-        lblTotalClasesReservadas.textProperty().bind(modelFactory.totalClasesReservadasProperty().asString());
+    private void initIndicadores(Gimnasio gimnasio) { // Recibe gimnasio como parámetro
+        lblClaseMasReservada.setText(gimnasio.contarClaseMasReservada());
+        lblTotalClasesReservadas.setText(String.valueOf(gimnasio.contarTotalClasesReservadas()));
     }
 }

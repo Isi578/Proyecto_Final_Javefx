@@ -57,7 +57,7 @@ public class AdminUsuariosViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios();
+        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
 
         initDataBinding();
         tableUsuario.setItems(listaUsuarios);
@@ -91,18 +91,20 @@ public class AdminUsuariosViewController implements Initializable {
     }
 
     @FXML
-    void onNuevo(ActionEvent event) {
+    void onNuevo() {
         limpiarCampos();
     }
 
     @FXML
-    void onAgregar(ActionEvent event) {
+    void onAgregar() {
         try {
             Usuario usuario = crearUsuarioDesdeFormulario();
             if (usuario == null) return;
 
             if (datosValidos(usuario)) {
                 gimnasio.registrarUsuario(usuario);
+                listaUsuarios.setAll(gimnasio.getListaUsuarios()); // Actualizar observable list
+                tableUsuario.refresh(); // Refrescar tabla
                 limpiarCampos();
                 mostrarAlerta("Usuario Agregado", "El usuario se agregó correctamente.", Alert.AlertType.INFORMATION);
             }
@@ -114,7 +116,7 @@ public class AdminUsuariosViewController implements Initializable {
     }
 
     @FXML
-    void onActualizar(ActionEvent event) {
+    void onActualizar() {
         if (usuarioSeleccionado == null) {
             mostrarAlerta("Seleccione un Usuario", "Debe seleccionar un usuario de la tabla para actualizarlo.", Alert.AlertType.WARNING);
             return;
@@ -146,6 +148,7 @@ public class AdminUsuariosViewController implements Initializable {
 
             gimnasio.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), datosNuevos);
 
+            listaUsuarios.setAll(gimnasio.getListaUsuarios()); // Actualizar observable list
             tableUsuario.refresh();
             limpiarCampos();
             mostrarAlerta("Usuario Actualizado", "El usuario se actualizó correctamente.", Alert.AlertType.INFORMATION);
@@ -158,7 +161,7 @@ public class AdminUsuariosViewController implements Initializable {
     }
 
     @FXML
-    void onEliminar(ActionEvent event) {
+    void onEliminar() {
         if (usuarioSeleccionado == null) {
             mostrarAlerta("Seleccione un Usuario", "Debe seleccionar un usuario de la tabla para eliminarlo.", Alert.AlertType.WARNING);
             return;
@@ -170,6 +173,8 @@ public class AdminUsuariosViewController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 gimnasio.eliminarUsuario(usuarioSeleccionado.getIdentificacion());
+                listaUsuarios.setAll(gimnasio.getListaUsuarios()); // Actualizar observable list
+                tableUsuario.refresh(); // Refrescar tabla
                 limpiarCampos();
                 mostrarAlerta("Usuario Eliminado", "El usuario se eliminó correctamente.", Alert.AlertType.INFORMATION);
             } catch (Exception e) {
@@ -219,7 +224,7 @@ public class AdminUsuariosViewController implements Initializable {
             case "Estudiante":
                 return new Estudiante(nombre, id, edad, telefono, tipoMembresia, 0.1);
             case "Trabajador":
-                return new Trabajador(nombre, id, edad, telefono, tipoMembresia, "N/A");
+                return new Trabajador(nombre, id, edad, telefono, tipoMembresia);
             default: // Externo
                 return new Externo(nombre, id, edad, telefono, tipoMembresia);
         }
