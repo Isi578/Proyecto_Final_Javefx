@@ -65,7 +65,7 @@ public class AdminUsuariosViewController implements Initializable {
 
         comboBoxUsuarios.getItems().addAll("Externo", "Estudiante", "Trabajador");
         comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");
-        txtIdentificacion.setEditable(true); // Asegurarse de que sea editable al inicio
+        txtIdentificacion.setEditable(true);
     }
 
     private void initDataBinding() {

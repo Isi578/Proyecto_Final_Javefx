@@ -12,6 +12,10 @@ public class UsuarioTest {
         assertEquals("101", u.getId());
         assertEquals("Carlos López", u.getNombre());
     }
+    @Test
+    void testEdadNegativo(){
+        assertThrows(IllegalArgumentException.class, () -> new Usuario("Paola", -18));
+    }
 
     @Test
     void testRegistrarUsuarioSinNombre() {

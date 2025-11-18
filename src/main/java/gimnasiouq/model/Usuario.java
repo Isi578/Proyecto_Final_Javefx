@@ -18,15 +18,19 @@ public class Usuario {
     private final List<ReservaClase> reservas = new ArrayList<>();
 
     public Usuario(String nombre, String identificacion, int edad, String celular, String membresia) {
+        if (edad < 13){
+            throw new IllegalArgumentException("la edad no puede ser menor de 13");
+        }
         this.nombre = nombre;
         this.identificacion = identificacion;
         this.edad = edad;
         this.celular = celular;
         this.tipoMembresia = membresia;
         this.membresiaObj = null;
+
     }
 
-    public Usuario() {
+    public Usuario(String paola, int i) {
 
     }
 

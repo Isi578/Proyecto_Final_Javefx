@@ -91,7 +91,7 @@ public class Gimnasio {
         return buscarUsuario(identificacion).orElse(null);
     }
 
-//metodo para actualizar el ususario con el id
+//metodo para actualizar el usuario con el id
     public Usuario actualizarUsuario(String id, Usuario usuarioInfo) throws Exception {
         Usuario usuario = buscarUsuario(id)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + id));
@@ -99,7 +99,6 @@ public class Gimnasio {
         usuario.setNombre(usuarioInfo.getNombre());
         usuario.setEdad(usuarioInfo.getEdad());
         usuario.setCelular(usuarioInfo.getCelular());
-        // No se actualiza el ID, ya que es el identificador único.
         return usuario;
     }
 
@@ -185,7 +184,6 @@ public class Gimnasio {
             costoAsignado = true;
         }
 
-        // Si el tipo de membresía no coincide con ninguno, no se puede calcular.
         if (!costoAsignado) {
             return null;
         }
@@ -204,7 +202,6 @@ public class Gimnasio {
             return new MembresiaVIP(costo, fechaInicio, fechaFin);
         }
 
-        // Se retorna null para evitar crear una membresía incorrecta.
         return null;
     }
 
