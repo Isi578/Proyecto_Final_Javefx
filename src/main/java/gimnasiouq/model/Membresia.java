@@ -115,7 +115,7 @@ public abstract class Membresia {
         return tipo;
     }
 
-    public void getFechaFin() {
-        return;
+    public byte getFechaFin() {
+        return 0;
     }
 }
