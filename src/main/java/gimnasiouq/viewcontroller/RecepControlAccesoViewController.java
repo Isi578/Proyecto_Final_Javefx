@@ -22,10 +22,6 @@ public class RecepControlAccesoViewController implements Initializable {
     private ObservableList<ControlAcceso> listaRegistros;
 
     @FXML
-    private Button btnBuscarUsuario;
-    @FXML
-    private Button btnEliminar;
-    @FXML
     private Button btnValidarIngreso;
     @FXML
     private Label lbFechaVencimientoEncontrado;
@@ -66,12 +62,12 @@ public class RecepControlAccesoViewController implements Initializable {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getIdentificacion()));
-        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getTipoMembresia()));
+        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
         tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         tcHora.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHora().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
-        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado()));
+        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isEstado() ? "Activo" : "Inactivo"));
 
         tcEstado.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -82,7 +78,7 @@ public class RecepControlAccesoViewController implements Initializable {
                     setStyle("");
                 } else {
                     setText(item);
-                    if ("Ingreso".equalsIgnoreCase(item)) {
+                    if ("Activo".equalsIgnoreCase(item)) {
                         setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
                     } else {
                         setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
@@ -92,7 +88,7 @@ public class RecepControlAccesoViewController implements Initializable {
         });
 
         tcUsuario.setCellValueFactory(cellData -> {
-            Usuario usuario = cellData.getValue().getUsuario();
+            Usuario usuario = gimnasio.buscarUsuarioPorIdentificacion(cellData.getValue().getIdentificacion());
             if (usuario instanceof Estudiante) return new SimpleStringProperty("Estudiante");
             if (usuario instanceof Trabajador) return new SimpleStringProperty("Trabajador");
             if (usuario instanceof Externo) return new SimpleStringProperty("Externo");
@@ -133,7 +129,7 @@ public class RecepControlAccesoViewController implements Initializable {
             return;
         }
 
-        ControlAcceso nuevoAcceso = new ControlAcceso(java.time.LocalDate.now(), LocalTime.now(), "Ingreso", usuarioActual);
+        ControlAcceso nuevoAcceso = new ControlAcceso(java.time.LocalDate.now(), LocalTime.now(), usuarioActual.getNombre(), usuarioActual.getIdentificacion(), usuarioActual.getMembresiaObj().getTipo(), true);
         gimnasio.getListaRegistrosAcceso().add(nuevoAcceso);
         listaRegistros.add(nuevoAcceso);
 
@@ -143,9 +139,6 @@ public class RecepControlAccesoViewController implements Initializable {
 
     @FXML
     void onEliminar(ActionEvent event) {
-        // La funcionalidad de eliminar registros podría ser solo para administradores.
-        // Si un recepcionista no debe eliminar, este botón no debería estar en su FXML.
-        // Por consistencia, se implementa la lógica.
         ControlAcceso registroSeleccionado = tableRegistros.getSelectionModel().getSelectedItem();
         if (registroSeleccionado == null) {
             mostrarAlerta("Error", "Seleccione un registro de la tabla para eliminar.", Alert.AlertType.WARNING);
@@ -153,7 +146,7 @@ public class RecepControlAccesoViewController implements Initializable {
         }
 
         Optional<ButtonType> result = mostrarAlertaConfirmacion("Confirmar Eliminación",
-                "¿Está seguro de que desea eliminar el registro de acceso de " + registroSeleccionado.getUsuario().getNombre() + "?");
+                "¿Está seguro de que desea eliminar el registro de acceso de " + registroSeleccionado.getNombre() + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             gimnasio.getListaRegistrosAcceso().remove(registroSeleccionado);

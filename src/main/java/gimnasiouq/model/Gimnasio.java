@@ -1,69 +1,63 @@
 package gimnasiouq.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
 // Clase principal del modelo que gestiona todas las listas de datos.
 public class Gimnasio {
-    private List<Usuario> listaUsuarios;
-    private List<Recepcion> listaRecepcionista;
-    private List<Administrador> listaAdministrador;
-    private List<Entrenador> listaEntrenador;
-    private List<ControlAcceso> listaRegistrosAcceso;
-    private List<ReservaClase> listaReservasClases;
+    private final ObservableList<Usuario> listaUsuarios; // Cambiado a ObservableList
+    private Recepcion recepcionista;
+    private Administrador administrador;
+    private final List<Entrenador> listaEntrenador;
+    private final ObservableList<ControlAcceso> listaRegistrosAcceso; // Cambiado a ObservableList
+    private final ObservableList<ReservaClase> listaReservasClases; // Cambiado a ObservableList
 
 //constructor
     public Gimnasio() {
-        this.listaUsuarios = new ArrayList<>();
-        this.listaRecepcionista = new ArrayList<>();
-        this.listaAdministrador = new ArrayList<>();
+        this.listaUsuarios = FXCollections.observableArrayList(); // Inicializado como ObservableList
+        this.recepcionista = null;
+        this.administrador = null;
         this.listaEntrenador = new ArrayList<>();
-        this.listaRegistrosAcceso = new ArrayList<>();
-        this.listaReservasClases = new ArrayList<>();
+        this.listaRegistrosAcceso = FXCollections.observableArrayList(); // Inicializado como ObservableList
+        this.listaReservasClases = FXCollections.observableArrayList(); // Inicializado como ObservableList
     }
 
-//get y set
-    public List<Usuario> getListaUsuarios() {
+//get y set para los nuevos atributos
+    public Administrador getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(Administrador administrador) {
+        this.administrador = administrador;
+    }
+
+    public Recepcion getRecepcionista() {
+        return recepcionista;
+    }
+
+    public void setRecepcionista(Recepcion recepcionista) {
+        this.recepcionista = recepcionista;
+    }
+
+//get y set existentes
+    public ObservableList<Usuario> getListaUsuarios() { // Retorna ObservableList
         return listaUsuarios;
-    }
-    public void setListaUsuarios(List<Usuario> listaUsuarios) {
-        this.listaUsuarios = listaUsuarios;
-    }
-
-    public List<Recepcion> getListaRecepcionista() {
-        return listaRecepcionista;
-    }
-    public void setListaRecepcionista(List<Recepcion> listaRecepcionista) {
-        this.listaRecepcionista = listaRecepcionista;
-    }
-
-    public List<Administrador> getListaAdministrador() {
-        return listaAdministrador;
-    }
-    public void setListaAdministrador(List<Administrador> listaAdministrador) {
-        this.listaAdministrador = listaAdministrador;
     }
 
     public List<Entrenador> getListaEntrenador() {
         return listaEntrenador;
     }
-    public void setListaEntrenador(List<Entrenador> listaEntrenador) {
-        this.listaEntrenador = listaEntrenador;
-    }
 
-    public List<ControlAcceso> getListaRegistrosAcceso() {
+    public ObservableList<ControlAcceso> getListaRegistrosAcceso() { // Retorna ObservableList
         return listaRegistrosAcceso;
     }
-    public void setListaRegistrosAcceso(List<ControlAcceso> listaRegistrosAcceso) {
-        this.listaRegistrosAcceso = listaRegistrosAcceso;
-    }
 
-    public List<ReservaClase> getListaReservasClases() {
+    public ObservableList<ReservaClase> getListaReservasClases() { // Retorna ObservableList
         return listaReservasClases;
-    }
-    public void setListaReservasClases (List<ReservaClase> listaReservasClases){
-        this.listaReservasClases = listaReservasClases;
     }
 
 //crud del usuario
@@ -74,12 +68,11 @@ public class Gimnasio {
     }
 
 //metodo para el registro de usuarios
-    public Usuario registrarUsuario(Usuario usuario) throws Exception {
+    public void registrarUsuario(Usuario usuario) throws Exception {
         if (verificarUsuario(usuario.getIdentificacion())) {
             throw new Exception("El usuario con ID: " + usuario.getIdentificacion() + " ya se encuentra registrado.");
         }
         this.listaUsuarios.add(usuario);
-        return usuario;
     }
 
 //metodo para buscar usuario con id
@@ -92,15 +85,15 @@ public class Gimnasio {
     }
 
 //metodo para actualizar el ususario con el id
-    public Usuario actualizarUsuario(String id, Usuario usuarioInfo) throws Exception {
+    public void actualizarUsuario(String id, Usuario usuarioInfo) throws Exception {
         Usuario usuario = buscarUsuario(id)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + id));
 
         usuario.setNombre(usuarioInfo.getNombre());
         usuario.setEdad(usuarioInfo.getEdad());
         usuario.setCelular(usuarioInfo.getCelular());
+        usuario.setTipoMembresia(usuarioInfo.getTipoMembresia()); // Actualizar el tipo de membresía
         // No se actualiza el ID, ya que es el identificador único.
-        return usuario;
     }
 
 //metodo para eliminar un usuario con el id
@@ -114,31 +107,17 @@ public class Gimnasio {
 //crud de la membresia
 
 //metodo para asignar membresia a un usuario
-    public Usuario asignarMembresiaUsuario(String usuarioId, Membresia membresia) throws Exception {
+    public void asignarMembresiaUsuario(String usuarioId, Membresia membresia) throws Exception {
         Usuario usuario = buscarUsuario(usuarioId)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + usuarioId));
         usuario.setMembresiaObj(membresia);
-        return usuario;
-    }
-
-//metodo para actualizar una membresia
-    public Usuario actualizarMembresiaUsuario(String usuarioId, Membresia membresia) throws Exception {
-        return asignarMembresiaUsuario(usuarioId, membresia);
     }
 
 //metodo para eliminar una membresia
-    public Usuario eliminarMembresiaUsuario(String usuarioId) throws Exception {
+    public void eliminarMembresiaUsuario(String usuarioId) throws Exception {
         Usuario usuario = buscarUsuario(usuarioId)
                 .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + usuarioId));
         usuario.setMembresiaObj(null);
-        return usuario;
-    }
-
-//metodo para obtener la membresia de un usuario
-    public Optional<Membresia> obtenerMembresiaUsuario(String usuarioId) throws Exception {
-        Usuario usuario = buscarUsuario(usuarioId)
-                .orElseThrow(() -> new Exception("Usuario no encontrado con el ID: " + usuarioId));
-        return Optional.ofNullable(usuario.getMembresiaObj());
     }
 
 //metodo para calcular la membresia por plan de un usuario
@@ -212,23 +191,23 @@ public class Gimnasio {
 
 // metodo para verificar existencia de entrenador
     public boolean verificarEntrenador(String identificacion) {
-        return listaEntrenador.stream().anyMatch(e -> e.getId().equals(identificacion));
+        return listaEntrenador.stream().anyMatch(e -> e.getIdentificacion().equals(identificacion));
     }
 
-    public boolean agregarEntrenador(Entrenador entrenador) {
-        if (verificarEntrenador(entrenador.getId())) {
-            return false;
+    public void agregarEntrenador(Entrenador entrenador) throws Exception {
+        if (verificarEntrenador(entrenador.getIdentificacion())) {
+            throw new Exception("El entrenador con ID: " + entrenador.getIdentificacion() + " ya se encuentra registrado.");
         }
-        return listaEntrenador.add(entrenador);
+        listaEntrenador.add(entrenador);
     }
 
 //metodo para buscar un entrenador
     public Optional<Entrenador> buscarEntrenador(String identificacion) {
-        return listaEntrenador.stream().filter(e -> e.getId().equals(identificacion)).findFirst();
+        return listaEntrenador.stream().filter(e -> e.getIdentificacion().equals(identificacion)).findFirst();
     }
 
 //metodo para actualizar un entrenador
-    public Entrenador actualizarEntrenador(String id, Entrenador entrenadorInfo) throws Exception {
+    public void actualizarEntrenador(String id, Entrenador entrenadorInfo) throws Exception {
         Entrenador entrenador = buscarEntrenador(id)
                 .orElseThrow(() -> new Exception("Entrenador no encontrado con el ID: " + id));
 
@@ -236,91 +215,40 @@ public class Gimnasio {
         entrenador.setEdad(entrenadorInfo.getEdad());
         entrenador.setCorreo(entrenadorInfo.getCorreo());
         entrenador.setCargo(entrenadorInfo.getCargo());
-        return entrenador;
     }
 
 //metodo para eliminar un entrenador
-    public boolean eliminarEntrenador(String identificacion) throws Exception {
-        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getId().equals(identificacion));
+    public void eliminarEntrenador(String identificacion) throws Exception {
+        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getIdentificacion().equals(identificacion));
         if (!removed) {
             throw new Exception("No se pudo eliminar. No existe un entrenador con el ID: " + identificacion);
         }
-        return removed;
     }
 
 //CRUD de control de acceso
 
-    public boolean agregarRegistroAcceso(ControlAcceso registro) {
-        return listaRegistrosAcceso.add(registro);
-    }
-
-//metodo para verificar acceso al spa
-    public boolean puedeAccederSpa(String identificacion) {
-        Usuario usuario = buscarUsuarioPorIdentificacion(identificacion);
-        if (usuario == null || usuario.getMembresiaObj() == null) {
-            return false;
-        }
-        return "VIP".equalsIgnoreCase(usuario.getMembresiaObj().getTipo());
-    }
-
-//metodo para buscar el ingreso del usuario por identificacion
-    public boolean validarIngresoUsuario(String identificacion) {
-        Usuario u = buscarUsuarioPorIdentificacion(identificacion);
-        return u != null && u.tieneMembresiaActiva();
+    public void agregarRegistroAcceso(ControlAcceso registro) {
+        listaRegistrosAcceso.add(registro);
     }
 
 //metodo para registrar el ingreso del usuario
-    public boolean registrarIngresoUsuario(String identificacion) {
+    public void registrarIngresoUsuario(String identificacion) {
         Usuario u = buscarUsuarioPorIdentificacion(identificacion);
-        if (u == null || !u.tieneMembresiaActiva()) {
-            return false;
+        if (u != null && u.tieneMembresiaActiva()) {
+            Membresia membresia = u.getMembresiaObj();
+            ControlAcceso registro = new ControlAcceso(
+                    LocalDate.now(),
+                    LocalTime.now(),
+                    u.getNombre(),
+                    u.getIdentificacion(),
+                    membresia.getTipo(),
+                    true
+            );
+            agregarRegistroAcceso(registro);
         }
-        Membresia membresia = u.getMembresiaObj();
-        ControlAcceso registro = new ControlAcceso(
-                LocalDate.now(),
-                LocalTime.now(),
-                "Ingreso",
-                u
-        );
-        return agregarRegistroAcceso(registro);
     }
 
-//metodo para validar la membresia
-    public boolean validarMembresia(Membresia membresia) {
-        if (membresia == null) return false;
-        if (membresia.getInicio() == null || membresia.getFin() == null) return false;
-        if (membresia.getInicio().isAfter(membresia.getFin())) return false;
-        if (membresia.getCosto() < 0) return false;
-        return true;
-    }
 //CRUD de reportes
-
-//metodo para contar el total deusuarios
-    public int contarTotalUsuarios() {
-        return listaUsuarios.size();
-    }
-
-    public int contarTotalMembresias() {
-        return (int) listaUsuarios.stream().filter(u -> u.getMembresiaObj() != null).count();
-    }
-
-//metodo para contar membresias activas
-    public int contarMembresiasUsuariosActivas() {
-        return (int) listaUsuarios.stream().filter(Usuario::tieneMembresiaActiva).count();
-    }
-
-//metodo para contar membresuas inactivas
-    public int contarMembresiasUsuariosInactivas() {
-        return (int) listaUsuarios.stream().filter(u -> !u.tieneMembresiaActiva()).count();
-    }
-
-    public double calcularIngresosTotales() {
-        return listaUsuarios.stream()
-                .map(Usuario::getMembresiaObj)
-                .filter(Objects::nonNull)
-                .mapToDouble(Membresia::getCosto)
-                .sum();
-    }
 
 //metodo para contar la clase mas reservada
     public String contarClaseMasReservada() {
@@ -350,17 +278,14 @@ public class Gimnasio {
     }
 
     public String autenticarEmpleado(String usuario, String contrasena) {
-        // Buscar en la lista de administradores
-        for (Administrador admin : listaAdministrador) {
-            if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(contrasena)) {
-                return "ADMINISTRADOR";
-            }
+        // Verificar si el administrador existe y las credenciales coinciden
+        if (administrador != null && administrador.getNombreUsuario().equals(usuario) && administrador.getContrasena().equals(contrasena)) {
+            return "ADMINISTRADOR";
         }
 
-        for (Recepcion recepcionista : listaRecepcionista) {
-            if (recepcionista.getUsuario().equals(usuario) && recepcionista.getContrasena().equals(contrasena)) {
-                return "RECEPCIONISTA";
-            }
+        // Verificar si el recepcionista existe y las credenciales coinciden
+        if (recepcionista != null && recepcionista.getNombreUsuario().equals(usuario) && recepcionista.getContrasena().equals(contrasena)) {
+            return "RECEPCIONISTA";
         }
 
         return null;

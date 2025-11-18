@@ -3,6 +3,7 @@ package gimnasiouq.viewcontroller;
 import gimnasiouq.GimnasioApp;
 import gimnasiouq.factory.ModelFactory;
 import gimnasiouq.model.Gimnasio;
+import gimnasiouq.util.DataUtil; // Importar DataUtil
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,17 +22,18 @@ public class LoginViewController implements Initializable {
     @FXML
     private PasswordField txtPasswordLogin;
     @FXML
-    private TextField txtUserLogin; // Asumiendo que el FXML tiene un TextField para el usuario
+    private ComboBox<String> comboBoxUser;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
+        comboBoxUser.getItems().addAll(DataUtil.ADMINISTRADOR, DataUtil.RECEPCIONISTA); // Usar constantes de DataUtil
         txtAdvertencia.setText("");
     }
 
     @FXML
     void login(ActionEvent event) {
-        String user = txtUserLogin.getText();
+        String user = comboBoxUser.getSelectionModel().getSelectedItem();
         String pass = txtPasswordLogin.getText();
 
         if (user == null || user.trim().isEmpty() || pass == null || pass.trim().isEmpty()) {
@@ -39,14 +41,11 @@ public class LoginViewController implements Initializable {
             return;
         }
 
-        String rol = gimnasio.autenticarEmpleado(user, pass);
-
-        if (rol != null) {
-            if (rol.equals("ADMINISTRADOR")) {
-                GimnasioApp.goToAdministrador();
-            } else if (rol.equals("RECEPCIONISTA")) {
-                GimnasioApp.goToRecepcionista();
-            }
+        // Autenticación usando las constantes de DataUtil
+        if (user.equals(DataUtil.ADMINISTRADOR) && pass.equals(DataUtil.ADMIN_CONTRASENA)) {
+            GimnasioApp.goToAdministrador();
+        } else if (user.equals(DataUtil.RECEPCIONISTA) && pass.equals(DataUtil.RECEP_CONTRASENA)) {
+            GimnasioApp.goToRecepcionista();
         } else {
             mostrarAlerta("Error de Autenticación", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
             txtAdvertencia.setText("Credenciales incorrectas");

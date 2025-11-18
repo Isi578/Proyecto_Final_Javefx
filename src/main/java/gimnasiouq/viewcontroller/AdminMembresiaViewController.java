@@ -7,13 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class AdminMembresiaViewController implements Initializable {
+public class AdminMembresiaViewController {
 
     private Gimnasio gimnasio;
     private ObservableList<Usuario> listaUsuarios;
@@ -21,186 +19,293 @@ public class AdminMembresiaViewController implements Initializable {
 
     @FXML
     private Button btnActualizar;
+
     @FXML
     private Button btnAsignar;
+
     @FXML
     private Button btnEliminar;
+
     @FXML
     private Button btnNuevo;
+
     @FXML
     private ComboBox<String> comboBoxPlanMembresia;
-    @FXML
-    private ComboBox<String> comboBoxTipoMembresia;
+
+    // @FXML // Eliminado: comboBoxTipoMembresia
+    // private ComboBox<String> comboBoxTipoMembresia;
+
     @FXML
     private TableView<Usuario> tableView;
+
     @FXML
     private TableColumn<Usuario, String> tcCosto;
+
     @FXML
     private TableColumn<Usuario, String> tcEstado;
+
     @FXML
     private TableColumn<Usuario, String> tcFechaFin;
+
     @FXML
     private TableColumn<Usuario, String> tcFechaInicio;
+
     @FXML
     private TableColumn<Usuario, String> tcIdentificacion;
+
     @FXML
     private TableColumn<Usuario, String> tcNombre;
+
     @FXML
     private TableColumn<Usuario, String> tcPlan;
+
     @FXML
     private TableColumn<Usuario, String> tcUsuario;
+
     @FXML
     private TextField txtCosto;
+
     @FXML
     private TextField txtFechaFin;
+
     @FXML
     private TextField txtFechaInicio;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 1. Obtener la instancia compartida del Gimnasio
-        this.gimnasio = ModelFactory.getInstance().getGimnasio();
-
-        // 2. Obtener la lista de usuarios y convertirla a ObservableList
-        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
-
-        // 3. Configurar la vista
-        initDataBinding();
-        tableView.setItems(listaUsuarios);
-
-        comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
-        comboBoxTipoMembresia.getItems().addAll("Basica", "Premium", "VIP");
-
-        listenerSelection();
+    @FXML
+    void onActualizar(ActionEvent event) {
+        actualizarMembresia();
     }
 
-    private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        tcFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaInicioFormateada()));
-        tcFechaFin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaFinFormateada()));
-        tcPlan.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlanMembresia()));
-        tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCostoMembresiaFormateado()));
-        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
-        tcUsuario.setCellValueFactory(cellData -> {
-            if (cellData.getValue() instanceof Estudiante) return new SimpleStringProperty("Estudiante");
-            if (cellData.getValue() instanceof Trabajador) return new SimpleStringProperty("Trabajador");
-            if (cellData.getValue() instanceof Externo) return new SimpleStringProperty("Externo");
-            return new SimpleStringProperty("N/A");
-        });
-    }
+    private void actualizarMembresia() {
+        if (usuarioSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un usuario para actualizar su membresía.", Alert.AlertType.WARNING);
+            return;
+        }
 
-    private void listenerSelection() {
-        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            usuarioSeleccionado = newSelection;
-            mostrarInformacionUsuario(usuarioSeleccionado);
-        });
-    }
+        String planSeleccionado = comboBoxPlanMembresia.getSelectionModel().getSelectedItem();
+        // String tipoMembresiaSeleccionado = comboBoxTipoMembresia.getSelectionModel().getSelectedItem(); // Eliminado
+        String tipoMembresiaSeleccionado = usuarioSeleccionado.getTipoMembresia(); // Obtener del usuario seleccionado
 
-    private void mostrarInformacionUsuario(Usuario usuario) {
-        if (usuario != null) {
-            txtFechaInicio.setText(usuario.getFechaInicioFormateada());
-            txtFechaFin.setText(usuario.getFechaFinFormateada());
-            txtCosto.setText(usuario.getCostoMembresiaFormateado());
-            comboBoxPlanMembresia.setValue(usuario.getPlanMembresia());
-            comboBoxTipoMembresia.setValue(usuario.getTipoMembresia());
-        } else {
-            limpiarCampos();
+        if (planSeleccionado == null || tipoMembresiaSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un plan y el usuario debe tener un tipo de membresía definido.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
+            Membresia nuevaMembresia = gimnasio.calcularMembresiaPorPlan(planSeleccionado, tipoMembresiaSeleccionado, usuarioSeleccionado);
+            if (nuevaMembresia != null) {
+                gimnasio.asignarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), nuevaMembresia);
+                mostrarAlerta("Éxito", "Membresía actualizada correctamente.", Alert.AlertType.INFORMATION);
+                limpiarCampos();
+                actualizarTabla(); // Refrescar la tabla para mostrar los cambios
+            } else {
+                mostrarAlerta("Error", "No se pudo calcular la membresía con los datos proporcionados.", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al actualizar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     void onAsignar(ActionEvent event) {
+        asignarMembresia();
+    }
+
+    private void asignarMembresia() {
         if (usuarioSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Debe seleccionar un usuario para asignar una membresía.", Alert.AlertType.WARNING);
             return;
         }
 
-        String plan = comboBoxPlanMembresia.getValue();
-        String tipo = comboBoxTipoMembresia.getValue();
+        String planSeleccionado = comboBoxPlanMembresia.getSelectionModel().getSelectedItem();
+        // String tipoMembresiaSeleccionado = comboBoxTipoMembresia.getSelectionModel().getSelectedItem(); // Eliminado
+        String tipoMembresiaSeleccionado = usuarioSeleccionado.getTipoMembresia(); // Obtener del usuario seleccionado
 
-        if (plan == null || tipo == null) {
-            mostrarAlerta("Error", "Debe seleccionar un plan y un tipo de membresía.", Alert.AlertType.ERROR);
+        if (planSeleccionado == null || tipoMembresiaSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un plan y el usuario debe tener un tipo de membresía definido.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            Membresia nuevaMembresia = gimnasio.calcularMembresiaPorPlan(plan, tipo, usuarioSeleccionado);
-            if (nuevaMembresia == null) {
+            Membresia nuevaMembresia = gimnasio.calcularMembresiaPorPlan(planSeleccionado, tipoMembresiaSeleccionado, usuarioSeleccionado);
+            if (nuevaMembresia != null) {
+                gimnasio.asignarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), nuevaMembresia);
+                mostrarAlerta("Éxito", "Membresía asignada correctamente.", Alert.AlertType.INFORMATION);
+                limpiarCampos();
+                actualizarTabla(); // Refrescar la tabla para mostrar los cambios
+            } else {
                 mostrarAlerta("Error", "No se pudo calcular la membresía con los datos proporcionados.", Alert.AlertType.ERROR);
-                return;
             }
-            gimnasio.asignarMembresiaUsuario(usuarioSeleccionado.getIdentificacion(), nuevaMembresia);
-            mostrarAlerta("Éxito", "Membresía asignada/actualizada correctamente.", Alert.AlertType.INFORMATION);
-            refrescarTabla();
         } catch (Exception e) {
-            mostrarAlerta("Error", "Ocurrió un error al asignar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Error al asignar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
         }
-    }
-
-    @FXML
-    void onActualizar(ActionEvent event) {
-        onAsignar(event); // La lógica es la misma que asignar una nueva
     }
 
     @FXML
     void onEliminar(ActionEvent event) {
+        eliminarMembresia();
+    }
+
+    private void eliminarMembresia() {
         if (usuarioSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un usuario de la tabla.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Debe seleccionar un usuario para eliminar su membresía.", Alert.AlertType.WARNING);
             return;
         }
 
-        Optional<ButtonType> result = mostrarAlertaConfirmacion("Confirmar Eliminación",
-                "¿Está seguro de que desea eliminar la membresía de " + usuarioSeleccionado.getNombre() + "?");
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                gimnasio.eliminarMembresiaUsuario(usuarioSeleccionado.getIdentificacion());
-                mostrarAlerta("Éxito", "Membresía eliminada correctamente.", Alert.AlertType.INFORMATION);
-                refrescarTabla();
-            } catch (Exception e) {
-                mostrarAlerta("Error", "Ocurrió un error al eliminar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
-            }
+        try {
+            gimnasio.eliminarMembresiaUsuario(usuarioSeleccionado.getIdentificacion());
+            mostrarAlerta("Éxito", "Membresía eliminada correctamente.", Alert.AlertType.INFORMATION);
+            limpiarCampos();
+            actualizarTabla(); // Refrescar la tabla para mostrar los cambios
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al eliminar la membresía: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     void onNuevo(ActionEvent event) {
-        tableView.getSelectionModel().clearSelection();
         limpiarCampos();
-    }
-
-    private void limpiarCampos() {
+        tableView.getSelectionModel().clearSelection();
         usuarioSeleccionado = null;
-        txtFechaInicio.clear();
-        txtFechaFin.clear();
-        txtCosto.clear();
-        comboBoxPlanMembresia.setValue(null);
-        comboBoxTipoMembresia.setValue(null);
     }
 
-    private void refrescarTabla() {
-        tableView.refresh();
-        int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-        if (selectedIndex >= 0) {
-            tableView.getSelectionModel().clearSelection();
-            tableView.getSelectionModel().select(selectedIndex);
+    @FXML
+    void initialize() {
+        this.gimnasio = ModelFactory.getInstance().getGimnasio();
+        this.listaUsuarios = gimnasio.getListaUsuarios();
+        initView();
+        comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
+
+        // Eliminado: comboBoxTipoMembresia.getItems().addAll("Basica", "Premium", "VIP");
+
+        // Añadir listeners a los ComboBoxes para actualizar los detalles de la membresía
+        comboBoxPlanMembresia.valueProperty().addListener((obs, oldVal, newVal) -> updateMembershipDetails());
+        // Eliminado: comboBoxTipoMembresia.valueProperty().addListener((obs, oldVal, newVal) -> updateMembershipDetails());
+    }
+
+    private void initView() {
+        initDataBinding();
+        tableView.setItems(listaUsuarios);
+        listenerSelection();
+    }
+
+    private void initDataBinding() {
+        if (tcNombre != null) {
+            tcNombre.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getNombre()));
+        }
+        if (tcIdentificacion != null) {
+            tcIdentificacion.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        }
+        if (tcFechaInicio != null) {
+            tcFechaInicio.setCellValueFactory(cellData -> {
+                Usuario usuario = cellData.getValue();
+                return new SimpleStringProperty(usuario.getFechaInicioFormateada());
+            });
+        }
+        if (tcFechaFin != null) {
+            tcFechaFin.setCellValueFactory(cellData -> {
+                Usuario usuario = cellData.getValue();
+                return new SimpleStringProperty(usuario.getFechaFinFormateada());
+            });
+        }
+        if (tcPlan != null) {
+            tcPlan.setCellValueFactory(cellData -> {
+                Usuario usuario = cellData.getValue();
+                return new SimpleStringProperty(usuario.getPlanMembresia());
+            });
+        }
+        if (tcCosto != null) {
+            tcCosto.setCellValueFactory(cellData -> {
+                Usuario usuario = cellData.getValue();
+                return new SimpleStringProperty(usuario.getCostoMembresiaFormateado());
+            });
+        }
+        if (tcEstado != null) {
+            tcEstado.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getEstadoMembresia()));
+        }
+        if (tcUsuario != null) {
+            tcUsuario.setCellValueFactory(cellData -> {
+                if (cellData.getValue() instanceof Estudiante) {
+                    return new SimpleStringProperty("Estudiante");
+                } else if (cellData.getValue() instanceof Trabajador) {
+                    return new SimpleStringProperty("Trabajador UQ");
+                } else {
+                    return new SimpleStringProperty("Externo");
+                }
+            });
         }
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alert = new Alert(tipo);
+    private void listenerSelection() {
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newSelection) -> {
+                    usuarioSeleccionado = newSelection;
+                    mostrarInformacionUsuario(usuarioSeleccionado);
+                    updateMembershipDetails(); // Actualizar detalles cuando se selecciona un usuario
+                });
+    }
+
+    private void mostrarInformacionUsuario(Usuario usuario) {
+        if (usuario != null) {
+            if (usuario.getMembresiaObj() != null) {
+                Membresia membresia = usuario.getMembresiaObj();
+                txtFechaInicio.setText(membresia.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                txtFechaFin.setText(membresia.getFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                comboBoxPlanMembresia.getSelectionModel().select(membresia.getTipo()); // Esto podría ser el plan o el tipo de membresía, ajusta según tu modelo
+                // Eliminado: comboBoxTipoMembresia.getSelectionModel().select(membresia.getTipo());
+                txtCosto.setText(String.valueOf(membresia.getCosto()));
+            } else {
+                limpiarCampos();
+            }
+        }
+    }
+
+    private void limpiarCampos() {
+        txtFechaInicio.setText("");
+        txtFechaFin.setText("");
+        comboBoxPlanMembresia.getSelectionModel().clearSelection();
+        // Eliminado: comboBoxTipoMembresia.getSelectionModel().clearSelection();
+        txtCosto.setText("");
+    }
+
+    private void actualizarTabla() {
+        tableView.refresh();
+    }
+
+    private void mostrarAlerta(String titulo, String contenido, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
-        alert.setContentText(mensaje);
+        alert.setContentText(contenido);
         alert.showAndWait();
     }
 
-    private Optional<ButtonType> mostrarAlertaConfirmacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        return alert.showAndWait();
+    // Método para actualizar los detalles de la membresía
+    private void updateMembershipDetails() {
+        String planSeleccionado = comboBoxPlanMembresia.getSelectionModel().getSelectedItem();
+        // String tipoMembresiaSeleccionado = comboBoxTipoMembresia.getSelectionModel().getSelectedItem(); // Eliminado
+        String tipoMembresiaSeleccionado = (usuarioSeleccionado != null) ? usuarioSeleccionado.getTipoMembresia() : null; // Obtener del usuario seleccionado
+
+        if (usuarioSeleccionado != null && planSeleccionado != null && tipoMembresiaSeleccionado != null) {
+            Membresia membresiaCalculada = gimnasio.calcularMembresiaPorPlan(planSeleccionado, tipoMembresiaSeleccionado, usuarioSeleccionado);
+            if (membresiaCalculada != null) {
+                txtFechaInicio.setText(membresiaCalculada.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                txtFechaFin.setText(membresiaCalculada.getFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                txtCosto.setText(String.format("%.0f", membresiaCalculada.getCosto()));
+            } else {
+                // Si no se puede calcular, limpiar los campos
+                txtFechaInicio.setText("");
+                txtFechaFin.setText("");
+                txtCosto.setText("");
+            }
+        } else {
+            // Si falta alguna selección, limpiar los campos
+            txtFechaInicio.setText("");
+            txtFechaFin.setText("");
+            txtCosto.setText("");
+        }
     }
 }

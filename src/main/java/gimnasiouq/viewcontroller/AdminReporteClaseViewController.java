@@ -11,14 +11,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminReporteClaseViewController implements Initializable {
 
     private Gimnasio gimnasio;
+    private ObservableList<ReservaClase> listaReservas; // Declarar aquí para usar la referencia directa
 
     @FXML
     private Label lblClaseMasReservada;
@@ -36,36 +37,33 @@ public class AdminReporteClaseViewController implements Initializable {
     private TableColumn<ReservaClase, String> tcHorario;
     @FXML
     private TableColumn<ReservaClase, String> tcIdUsuario;
-    
-    // La columna tcCupoMaximo no parece relevante para una lista de reservas individuales,
-    // pero se mantiene si el FXML la requiere. Se mostrará un valor por defecto.
+
     @FXML
     private TableColumn<ReservaClase, String> tcCupoMaximo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
+        this.listaReservas = gimnasio.getListaReservasClases(); // Obtener la ObservableList directamente del modelo
+        initDataBinding();
+        tableClases.setItems(listaReservas); // Establecer la lista directamente en la tabla
         actualizarReporte();
     }
 
     private void actualizarReporte() {
-        List<ReservaClase> reservas = gimnasio.getListaReservasClases();
-        ObservableList<ReservaClase> reservasObservables = FXCollections.observableArrayList(reservas);
-
-        tableClases.setItems(reservasObservables);
-        initDataBinding();
+        // No es necesario crear una nueva ObservableList aquí, ya estamos usando la del modelo
+        // tableClases.setItems(listaReservas); // Ya se hizo en initialize
         initIndicadores();
+        tableClases.refresh(); // Refrescar la tabla para asegurar que los datos se muestren
     }
 
     private void initDataBinding() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         tcClase.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClase()));
         tcHorario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHorario()));
-        tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().format(formatter)));
-        tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador().getNombre()));
-        tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getIdentificacion()));
-        tcCupoMaximo.setCellValueFactory(cellData -> new SimpleStringProperty("20"));
+        tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha()));
+        tcEntrenador.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntrenador()));
+        tcIdUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcCupoMaximo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCupoMaximo())));
     }
 
     private void initIndicadores() {

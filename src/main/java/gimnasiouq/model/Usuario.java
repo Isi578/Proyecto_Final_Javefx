@@ -163,4 +163,9 @@ import java.util.Objects;
     public int hashCode() {
         return Objects.hash(identificacion);
     }
+
+    @Override
+    public String toString() {
+        return nombre + " (" + identificacion + ")";
+    }
 }

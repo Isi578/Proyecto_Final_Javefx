@@ -57,15 +57,15 @@ public class AdminUsuariosViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
+        this.listaUsuarios = gimnasio.getListaUsuarios();
 
         initDataBinding();
         tableUsuario.setItems(listaUsuarios);
         listenerSelection();
 
-        // El ComboBox de membresía es solo de referencia, no se usa para crear/actualizar aquí.
-        comboBoxMembresia.setDisable(true);
         comboBoxUsuarios.getItems().addAll("Externo", "Estudiante", "Trabajador");
+        comboBoxMembresia.getItems().addAll("Basica", "Premium", "VIP");
+        txtIdentificacion.setEditable(true); // Asegurarse de que sea editable al inicio
     }
 
     private void initDataBinding() {
@@ -86,6 +86,7 @@ public class AdminUsuariosViewController implements Initializable {
         tableUsuario.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             usuarioSeleccionado = newSelection;
             mostrarInformacionUsuario(usuarioSeleccionado);
+            // Ya no se deshabilita la edición de la identificación aquí
         });
     }
 
@@ -102,7 +103,6 @@ public class AdminUsuariosViewController implements Initializable {
 
             if (datosValidos(usuario)) {
                 gimnasio.registrarUsuario(usuario);
-                listaUsuarios.add(usuario);
                 limpiarCampos();
                 mostrarAlerta("Usuario Agregado", "El usuario se agregó correctamente.", Alert.AlertType.INFORMATION);
             }
@@ -122,17 +122,26 @@ public class AdminUsuariosViewController implements Initializable {
 
         try {
             String nombre = txtNombre.getText();
+            // La identificación se toma del campo de texto, ya que es editable
+            String identificacionActualizada = txtIdentificacion.getText();
             int edad = Integer.parseInt(txtEdad.getText());
             String celular = txtCelular.getText();
+            String tipoMembresia = comboBoxMembresia.getValue();
 
-            if (nombre.isEmpty()) {
-                mostrarAlerta("Datos Incompletos", "El nombre no puede estar vacío.", Alert.AlertType.ERROR);
+            if (nombre.isEmpty() || identificacionActualizada.isEmpty()) {
+                mostrarAlerta("Datos Incompletos", "El nombre y la identificación no pueden estar vacíos.", Alert.AlertType.ERROR);
                 return;
             }
 
-            // CORRECCIÓN: Crear un objeto temporal solo con los datos a actualizar.
-            Usuario datosNuevos = new Usuario(nombre, "", edad, celular, "") {
-                // Se crea una clase anónima que extiende la clase abstracta, solo para pasar los datos.
+            // Si la identificación ha cambiado, se debe manejar como un nuevo usuario o una operación de cambio de ID
+            // Por ahora, asumimos que si se actualiza, la ID no cambia o se maneja en el modelo.
+            // Si la intención es permitir cambiar la ID, la lógica de `actualizarUsuario` en Gimnasio.java necesitaría ser más compleja.
+            // Para este caso, se usará la ID original del usuario seleccionado para buscarlo en el modelo.
+            // Si el usuario cambió la ID en el campo, esto podría llevar a un error si la nueva ID ya existe o si la original no se encuentra.
+            // Para simplificar y mantener la funcionalidad de "actualizar", se seguirá usando la ID original del usuario seleccionado.
+            // Si se desea cambiar la ID, se debería implementar una función específica para ello o un "eliminar y agregar".
+
+            Usuario datosNuevos = new Usuario(nombre, usuarioSeleccionado.getIdentificacion(), edad, celular, tipoMembresia != null ? tipoMembresia : "Sin Membresia") {
             };
 
             gimnasio.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), datosNuevos);
@@ -161,7 +170,6 @@ public class AdminUsuariosViewController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 gimnasio.eliminarUsuario(usuarioSeleccionado.getIdentificacion());
-                listaUsuarios.remove(usuarioSeleccionado);
                 limpiarCampos();
                 mostrarAlerta("Usuario Eliminado", "El usuario se eliminó correctamente.", Alert.AlertType.INFORMATION);
             } catch (Exception e) {
@@ -179,7 +187,7 @@ public class AdminUsuariosViewController implements Initializable {
         txtCelular.clear();
         comboBoxMembresia.setValue(null);
         comboBoxUsuarios.setValue(null);
-        txtIdentificacion.setEditable(true);
+        txtIdentificacion.setEditable(true); // Asegurarse de que sea editable al limpiar
     }
 
     private boolean datosValidos(Usuario usuario) {
@@ -202,14 +210,18 @@ public class AdminUsuariosViewController implements Initializable {
         String id = txtIdentificacion.getText();
         int edad = txtEdad.getText().isEmpty() ? 0 : Integer.parseInt(txtEdad.getText());
         String telefono = txtCelular.getText();
+        String tipoMembresia = comboBoxMembresia.getValue();
+        if (tipoMembresia == null || tipoMembresia.isEmpty()) {
+            tipoMembresia = "Sin Membresia";
+        }
 
         switch (tipoUsuario) {
             case "Estudiante":
-                return new Estudiante(nombre, id, edad, telefono, "Sin Membresia", 0.1);
+                return new Estudiante(nombre, id, edad, telefono, tipoMembresia, 0.1);
             case "Trabajador":
-                return new Trabajador(nombre, id, edad, telefono, "Sin Membresia", "N/A");
-            default:
-                return new Externo(nombre, id, edad, telefono, "Sin Membresia");
+                return new Trabajador(nombre, id, edad, telefono, tipoMembresia, "N/A");
+            default: // Externo
+                return new Externo(nombre, id, edad, telefono, tipoMembresia);
         }
     }
 
@@ -220,7 +232,7 @@ public class AdminUsuariosViewController implements Initializable {
             txtEdad.setText(String.valueOf(usuario.getEdad()));
             txtCelular.setText(usuario.getCelular());
             comboBoxMembresia.setValue(usuario.getTipoMembresia());
-            txtIdentificacion.setEditable(false);
+            // Ya no se deshabilita la edición de la identificación aquí
 
             if (usuario instanceof Estudiante) {
                 comboBoxUsuarios.setValue("Estudiante");
