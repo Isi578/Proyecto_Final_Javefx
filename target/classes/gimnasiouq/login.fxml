@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.viewcontroller.LoginViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gimnasiouq.viewcontroller.LoginViewController">
     <children>
         <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -67,6 +67,14 @@
                   <Insets bottom="10.0" top="10.0" />
                </padding>
                 </GridPane>
+                <Label fx:id="txtAdvertencia" alignment="CENTER" textFill="RED">
+                    <font>
+                        <Font name="Times New Roman Bold" size="12.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </Label>
                 <Button fx:id="loginButton" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#login" style="-fx-background-radius: 90;" text="Ingresar">
                     <font>
                         <Font name="Arial Bold" size="12.0" />

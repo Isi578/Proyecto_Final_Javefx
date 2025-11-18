@@ -5,9 +5,9 @@ import gimnasiouq.model.*;
 public class DataUtil {
 
     public static final String ADMINISTRADOR = "Administrador";
-    public static final String ADMIN_CONTRASENA = "administrador123";
+    public static final String ADMIN_CONTRASENA = "123";
     public static final String RECEPCIONISTA = "Recepcionista";
-    public static final String RECEP_CONTRASENA = "recepcionista456";
+    public static final String RECEP_CONTRASENA = "123";
 
     public static Gimnasio inicializarDatos() {
         Gimnasio gimnasioUQ = new Gimnasio();

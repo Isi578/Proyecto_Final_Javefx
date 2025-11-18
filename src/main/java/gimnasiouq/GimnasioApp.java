@@ -1,5 +1,6 @@
 package gimnasiouq;
 
+import gimnasiouq.factory.ModelFactory; // Importar ModelFactory
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +16,9 @@ public class GimnasioApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         mainStage = stage;
+
+        // Inicializar el ModelFactory para cargar los datos iniciales
+        ModelFactory.getInstance(); 
 
         var loginUrl = GimnasioApp.class.getResource("login.fxml");
         var recepUrl = GimnasioApp.class.getResource("recep.fxml");

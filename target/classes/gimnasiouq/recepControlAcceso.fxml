@@ -59,7 +59,7 @@
                         <Font name="Times New Roman" size="12.0" />
                     </font>
                 </Text>
-                <TextField fx:id="txtIdentificacion" GridPane.columnIndex="1" />
+                <TextField fx:id="txtIdentificacion" promptText="Ingrese la identificación..." GridPane.columnIndex="1" />
                 <Label fx:id="lbMembresiaEncontrada" text="membresiaEncontrada" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <font>
                         <Font name="Times New Roman" size="12.0" />
@@ -93,17 +93,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="btnBuscarUsuario" onAction="#onBuscarUsuario" mnemonicParsing="false" text="Buscar Usuario">
+                <Button fx:id="btnBuscarUsuario" mnemonicParsing="false" onAction="#onBuscarUsuario" text="Buscar Usuario">
                     <font>
                         <Font name="Times New Roman" size="12.0" />
                     </font>
                 </Button>
-                <Button fx:id="btnValidarIngreso" onAction="#onValidarIngreso" mnemonicParsing="false" text="Validar Ingreso" GridPane.columnIndex="1">
+                <Button fx:id="btnValidarIngreso" mnemonicParsing="false" onAction="#onValidarIngreso" text="Validar Ingreso" GridPane.columnIndex="1">
                     <font>
                         <Font name="Times New Roman" size="12.0" />
                     </font>
                 </Button>
-                <Button fx:id="btnEliminar" onAction="#onEliminar" mnemonicParsing="false" text="Eliminar" GridPane.columnIndex="2">
+                <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar" GridPane.columnIndex="2">
                     <font>
                         <Font name="Times New Roman" size="12.0" />
                     </font>

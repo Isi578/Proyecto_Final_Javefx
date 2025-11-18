@@ -55,8 +55,8 @@ public class AdminEntrenadorViewController implements Initializable {
 
     private void initDataBinding() {
         tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
-        tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getEdad())));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEdad()));
         tcCorreo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCorreo()));
         tcCargo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
     }
@@ -69,7 +69,7 @@ public class AdminEntrenadorViewController implements Initializable {
     }
 
     @FXML
-    void onNuevo() {
+    void onNuevo(ActionEvent event) {
         limpiarCampos();
         entrenadorSeleccionado = null;
         tableEntrenador.getSelectionModel().clearSelection();
@@ -77,26 +77,24 @@ public class AdminEntrenadorViewController implements Initializable {
     }
 
     @FXML
-    void onGuardar() {
+    void onGuardar(ActionEvent event) {
         try {
             Entrenador entrenador = buildEntrenadorFromFields();
-            if (entrenador == null) return; // Error de validación
+            if (entrenador == null) return;
 
-            gimnasio.registrarEntrenador(entrenador);
-            listaEntrenadores.add(entrenador); // Actualizar la lista observable
+            gimnasio.agregarEntrenador(entrenador);
+            listaEntrenadores.add(entrenador);
 
             limpiarCampos();
             mostrarAlerta("Éxito", "Entrenador creado exitosamente.", Alert.AlertType.INFORMATION);
 
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Error de Formato", "La edad debe ser un número válido.", Alert.AlertType.ERROR);
         } catch (Exception e) {
             mostrarAlerta("Error al Guardar", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    void onActualizar() {
+    void onActualizar(ActionEvent event) {
         if (entrenadorSeleccionado == null) {
             mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla.", Alert.AlertType.ERROR);
             return;
@@ -106,20 +104,18 @@ public class AdminEntrenadorViewController implements Initializable {
             Entrenador entrenadorActualizado = buildEntrenadorFromFields();
             if (entrenadorActualizado == null) return;
 
-            gimnasio.actualizarEntrenador(entrenadorSeleccionado.getId(), entrenadorActualizado);
-            tableEntrenador.refresh(); // Refrescar para mostrar los cambios
+            gimnasio.actualizarEntrenador(entrenadorSeleccionado.getIdentificacion(), entrenadorActualizado);
+            tableEntrenador.refresh();
             limpiarCampos();
             mostrarAlerta("Éxito", "Entrenador actualizado exitosamente.", Alert.AlertType.INFORMATION);
 
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Error de Formato", "La edad debe ser un número válido.", Alert.AlertType.ERROR);
         } catch (Exception e) {
             mostrarAlerta("Error al Actualizar", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    void onEliminar() {
+    void onEliminar(ActionEvent event) {
         if (entrenadorSeleccionado == null) {
             mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla.", Alert.AlertType.ERROR);
             return;
@@ -130,8 +126,8 @@ public class AdminEntrenadorViewController implements Initializable {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                gimnasio.eliminarEntrenador(entrenadorSeleccionado.getId());
-                listaEntrenadores.remove(entrenadorSeleccionado); // Actualizar la lista observable
+                gimnasio.eliminarEntrenador(entrenadorSeleccionado.getIdentificacion());
+                listaEntrenadores.remove(entrenadorSeleccionado);
                 limpiarCampos();
                 mostrarAlerta("Éxito", "Entrenador eliminado exitosamente.", Alert.AlertType.INFORMATION);
             } catch (Exception e) {
@@ -140,27 +136,26 @@ public class AdminEntrenadorViewController implements Initializable {
         }
     }
 
-    private Entrenador buildEntrenadorFromFields() throws NumberFormatException {
+    private Entrenador buildEntrenadorFromFields() {
         String nombre = txtNombre.getText();
         String identificacion = txtIdentificacion.getText();
-        String edadStr = txtEdad.getText();
+        String edad = txtEdad.getText();
         String correo = txtCorreo.getText();
         String cargo = txtCargo.getText();
 
-        if (nombre.isEmpty() || identificacion.isEmpty() || edadStr.isEmpty() || correo.isEmpty() || cargo.isEmpty()) {
+        if (nombre.isEmpty() || identificacion.isEmpty() || edad.isEmpty() || correo.isEmpty() || cargo.isEmpty()) {
             mostrarAlerta("Error", "Complete todos los campos.", Alert.AlertType.ERROR);
             return null;
         }
 
-        int edad = Integer.parseInt(edadStr); // Lanza NumberFormatException si no es válido
         return new Entrenador(nombre, identificacion, edad, correo, cargo);
     }
 
     private void mostrarInformacionEntrenador(Entrenador entrenador) {
         if (entrenador != null) {
             txtNombre.setText(entrenador.getNombre());
-            txtIdentificacion.setText(entrenador.getId());
-            txtEdad.setText(String.valueOf(entrenador.getEdad()));
+            txtIdentificacion.setText(entrenador.getIdentificacion());
+            txtEdad.setText(entrenador.getEdad());
             txtCorreo.setText(entrenador.getCorreo());
             txtCargo.setText(entrenador.getCargo());
             txtIdentificacion.setEditable(false);

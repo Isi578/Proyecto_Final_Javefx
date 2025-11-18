@@ -22,10 +22,6 @@ public class AdminControlAccesoViewController implements Initializable {
     private ObservableList<ControlAcceso> listaRegistros;
 
     @FXML
-    private Button btnBuscarUsuario;
-    @FXML
-    private Button btnEliminar;
-    @FXML
     private Button btnValidarIngreso;
     @FXML
     private Label lbFechaVencimientoEncontrado;
@@ -57,7 +53,6 @@ public class AdminControlAccesoViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-
         this.listaRegistros = FXCollections.observableArrayList(gimnasio.getListaRegistrosAcceso());
 
         initDataBinding();
@@ -67,12 +62,12 @@ public class AdminControlAccesoViewController implements Initializable {
     }
 
     private void initDataBinding() {
-        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getNombre()));
-        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getIdentificacion()));
-        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsuario().getTipoMembresia()));
+        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
+        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
         tcFecha.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         tcHora.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHora().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
-        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado()));
+        tcEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isEstado() ? "Activo" : "Inactivo"));
 
         tcEstado.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -83,7 +78,7 @@ public class AdminControlAccesoViewController implements Initializable {
                     setStyle("");
                 } else {
                     setText(item);
-                    if ("Ingreso".equalsIgnoreCase(item)) {
+                    if ("Activo".equalsIgnoreCase(item)) {
                         setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
                     } else {
                         setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
@@ -93,7 +88,7 @@ public class AdminControlAccesoViewController implements Initializable {
         });
 
         tcUsuario.setCellValueFactory(cellData -> {
-            Usuario usuario = cellData.getValue().getUsuario();
+            Usuario usuario = gimnasio.buscarUsuarioPorIdentificacion(cellData.getValue().getIdentificacion());
             if (usuario instanceof Estudiante) return new SimpleStringProperty("Estudiante");
             if (usuario instanceof Trabajador) return new SimpleStringProperty("Trabajador");
             if (usuario instanceof Externo) return new SimpleStringProperty("Externo");
@@ -109,17 +104,16 @@ public class AdminControlAccesoViewController implements Initializable {
             return;
         }
 
-        // Usar la instancia de gimnasio
         gimnasio.buscarUsuario(identificacion.trim()).ifPresentOrElse(
-            usuario -> {
-                usuarioActual = usuario;
-                actualizarInformacionUsuario(usuario);
-                btnValidarIngreso.setDisable(false);
-            },
-            () -> {
-                limpiarInformacionUsuario();
-                mostrarAlerta("Usuario no encontrado", "No existe un usuario con la identificación: " + identificacion, Alert.AlertType.WARNING);
-            }
+                usuario -> {
+                    usuarioActual = usuario;
+                    actualizarInformacionUsuario(usuario);
+                    btnValidarIngreso.setDisable(false);
+                },
+                () -> {
+                    limpiarInformacionUsuario();
+                    mostrarAlerta("Usuario no encontrado", "No existe un usuario con la identificación: " + identificacion, Alert.AlertType.WARNING);
+                }
         );
     }
 
@@ -135,10 +129,9 @@ public class AdminControlAccesoViewController implements Initializable {
             return;
         }
 
-        // Registrar el ingreso
-        ControlAcceso nuevoAcceso = new ControlAcceso(java.time.LocalDate.now(), LocalTime.now(), "Ingreso", usuarioActual);
+        ControlAcceso nuevoAcceso = new ControlAcceso(java.time.LocalDate.now(), LocalTime.now(), usuarioActual.getNombre(), usuarioActual.getIdentificacion(), usuarioActual.getMembresiaObj().getTipo(), true);
         gimnasio.getListaRegistrosAcceso().add(nuevoAcceso);
-        listaRegistros.add(nuevoAcceso); // Actualizar la lista observable
+        listaRegistros.add(nuevoAcceso);
 
         mostrarAlerta("Ingreso Validado", "Acceso registrado exitosamente para " + usuarioActual.getNombre(), Alert.AlertType.INFORMATION);
         limpiarFormulario();
@@ -153,11 +146,11 @@ public class AdminControlAccesoViewController implements Initializable {
         }
 
         Optional<ButtonType> result = mostrarAlertaConfirmacion("Confirmar Eliminación",
-                "¿Está seguro de que desea eliminar el registro de acceso de " + registroSeleccionado.getUsuario().getNombre() + "?");
+                "¿Está seguro de que desea eliminar el registro de acceso de " + registroSeleccionado.getNombre() + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             gimnasio.getListaRegistrosAcceso().remove(registroSeleccionado);
-            listaRegistros.remove(registroSeleccionado); // Actualizar la lista observable
+            listaRegistros.remove(registroSeleccionado);
             mostrarAlerta("Registro Eliminado", "El registro de acceso ha sido eliminado.", Alert.AlertType.INFORMATION);
         }
     }
@@ -166,7 +159,6 @@ public class AdminControlAccesoViewController implements Initializable {
         lbNombreEncontrado.setText(usuario.getNombre());
         Membresia membresia = usuario.getMembresiaObj();
         if (membresia != null) {
-            // Corregido: usar getTipo()
             lbMembresiaEncontrada.setText(membresia.getTipo());
             lbFechaVencimientoEncontrado.setText(usuario.getFechaFinFormateada());
             String estado = usuario.getEstadoMembresia();

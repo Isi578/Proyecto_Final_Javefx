@@ -1,15 +1,19 @@
 package gimnasiouq.factory;
 
 import gimnasiouq.model.*;
+import gimnasiouq.util.DataUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.List;
 
 public class ModelFactory {
-    private final ObservableList<ControlAcceso> listaRegistrosObservable;
-    private final Gimnasio gimnasio;
+    private Gimnasio gimnasio;
+
     private static ModelFactory instance;
 
     private ModelFactory() {
-        this.gimnasio = new Gimnasio();
-        inicializarDatos();
+        this.gimnasio = DataUtil.inicializarDatos();
     }
 
     public static ModelFactory getInstance() {
@@ -23,30 +27,20 @@ public class ModelFactory {
         return gimnasio;
     }
 
-    private void inicializarDatos() {
-        try {
-            Usuario estudiante = new Estudiante("Juan Perez", "111", 20, "311111", "Estudiante", 0.10);
-            Usuario trabajador = new Trabajador("Ana Gomez", "222", 35, "322222", "Trabajador", "Beneficios especiales");
-            Usuario externo = new Externo("Carlos Diaz", "333", 40, "333333", "Externo");
+    // Métodos eliminados:
+    // public ObservableList<Usuario> obtenerUsuariosObservable() {
+    //     return gimnasio.getListaUsuarios();
+    // }
+    //
+    // public ObservableList<Entrenador> obtenerEntrenadorObservable() {
+    //     return FXCollections.observableArrayList(gimnasio.getListaEntrenador());
+    // }
 
-            gimnasio.registrarUsuario(estudiante);
-            gimnasio.registrarUsuario(trabajador);
-            gimnasio.registrarUsuario(externo);
-
-            Membresia membresiaJuan = gimnasio.calcularMembresiaPorPlan("Mensual", "Basica", estudiante);
-            gimnasio.asignarMembresiaUsuario("111", membresiaJuan);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Administrador admin = new Administrador("admin", "admin123");
-        Recepcion recepcionista = new Recepcion("recep", "recep123");
-
-        gimnasio.getListaAdministrador().add(admin);
-        gimnasio.getListaRecepcionista().add(recepcionista);
+    public List<Entrenador> obtenerEntrenadores() {
+        return gimnasio.getListaEntrenador();
     }
 
     public void actualizarReportes() {
+        // Lógica para actualizar reportes si es necesario
     }
 }

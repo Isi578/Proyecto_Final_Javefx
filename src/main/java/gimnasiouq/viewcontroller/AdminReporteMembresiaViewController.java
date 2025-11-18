@@ -14,91 +14,91 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AdminReporteMembresiaViewController implements Initializable {
 
     private Gimnasio gimnasio;
+    private ObservableList<Usuario> listaUsuarios; // Usaremos la lista de usuarios directamente
 
     @FXML
     private Label lblIngresosTotales;
+
     @FXML
-    private Label lblmembresiasConValor; // Activas
+    private Label lblmembresiasConValor;
+
     @FXML
-    private Label lblmembresiasSinValor; // Inactivas
+    private Label lblmembresiasSinValor;
+
     @FXML
     private Label lblmembresiasTotales;
+
     @FXML
-    private TableView<Membresia> tableMembresias;
+    private TableView<Usuario> tableMembresias; // Cambiado a TableView<Usuario>
+
     @FXML
-    private TableColumn<Membresia, String> tcCosto;
+    private TableColumn<Usuario, String> tcCosto; // Cambiado a TableColumn<Usuario, String>
+
     @FXML
-    private TableColumn<Membresia, String> tcFechaInicio;
+    private TableColumn<Usuario, String> tcFechaInicio; // Cambiado a TableColumn<Usuario, String>
+
     @FXML
-    private TableColumn<Membresia, String> tcFechaVencimiento;
+    private TableColumn<Usuario, String> tcFechaVencimiento; // Cambiado a TableColumn<Usuario, String>
+
     @FXML
-    private TableColumn<Membresia, String> tcTipoMembresia;
+    private TableColumn<Usuario, String> tcPlanMembresia; // Cambiado a TableColumn<Usuario, String>
+
+    @FXML
+    private TableColumn<Usuario, String> tcTipoMembresia; // Cambiado a TableColumn<Usuario, String>
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Obtener la instancia de Gimnasio
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-
-        // Cargar y procesar los datos
-        actualizarReporte();
-    }
-
-    private void actualizarReporte() {
-        // Obtener todas las membresías de todos los usuarios
-        List<Membresia> todasLasMembresias = gimnasio.getListaUsuarios().stream()
-                .map(Usuario::getMembresiaObj)
-                .filter(Objects::nonNull) // Filtra usuarios sin membresía
-                .collect(Collectors.toList());
-
-        // Poblar la tabla
-        ObservableList<Membresia> membresiasObservables = FXCollections.observableArrayList(todasLasMembresias);
-        tableMembresias.setItems(membresiasObservables);
+        this.listaUsuarios = gimnasio.getListaUsuarios(); // Obtener la ObservableList directamente del modelo
         initDataBinding();
-
-        // Calcular y mostrar los indicadores
-        initIndicadores(todasLasMembresias);
+        tableMembresias.setItems(listaUsuarios); // Establecer la lista de usuarios directamente en la tabla
+        initIndicadores();
     }
 
     private void initDataBinding() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         tcFechaInicio.setCellValueFactory(cellData -> {
-            Membresia m = cellData.getValue();
-            return new SimpleStringProperty(m.getInicio() != null ? m.getInicio().format(formatter) : "N/A");
+            Usuario usuario = cellData.getValue();
+            return new SimpleStringProperty(usuario.getFechaInicioMembresia() != null ? usuario.getFechaInicioMembresia().format(formatter) : "N/A");
         });
         tcFechaVencimiento.setCellValueFactory(cellData -> {
-            Membresia m = cellData.getValue();
-            return new SimpleStringProperty(m.getFin() != null ? m.getFin().format(formatter) : "N/A");
+            Usuario usuario = cellData.getValue();
+            return new SimpleStringProperty(usuario.getFechaFinMembresia() != null ? usuario.getFechaFinMembresia().format(formatter) : "N/A");
         });
-        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo()));
-        tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.0f", cellData.getValue().getCosto())));
+        tcPlanMembresia.setCellValueFactory(cellData -> {
+            Usuario usuario = cellData.getValue();
+            return new SimpleStringProperty(usuario.getPlanMembresia());
+        });
+        tcTipoMembresia.setCellValueFactory(cellData -> {
+            Usuario usuario = cellData.getValue();
+            return new SimpleStringProperty(usuario.getTipoMembresia() != null ? usuario.getTipoMembresia() : "N/A");
+        });
+        tcCosto.setCellValueFactory(cellData -> {
+            Usuario usuario = cellData.getValue();
+            return new SimpleStringProperty(usuario.getMembresiaObj() != null ? String.format("$%.0f", usuario.getMembresiaObj().getCosto()) : "$0");
+        });
     }
 
-    private void initIndicadores(List<Membresia> membresias) {
-        // Calcular total de membresías
-        long total = membresias.size();
+    private void initIndicadores() {
+        long totalMembresias = listaUsuarios.stream().filter(u -> u.getMembresiaObj() != null).count();
+        long membresiasActivas = listaUsuarios.stream().filter(Usuario::tieneMembresiaActiva).count();
+        long membresiasInactivas = totalMembresias - membresiasActivas;
+        double ingresosTotales = listaUsuarios.stream()
+                .map(Usuario::getMembresiaObj)
+                .filter(m -> m != null)
+                .mapToDouble(Membresia::getCosto)
+                .sum();
 
-        // Calcular membresías activas
-        long activas = membresias.stream().filter(Membresia::estaVigente).count();
-
-        // Calcular membresías inactivas
-        long inactivas = total - activas;
-
-        // Calcular ingresos totales
-        double ingresos = membresias.stream().mapToDouble(Membresia::getCosto).sum();
-
-        // Asignar los valores a los Labels
-        lblmembresiasTotales.setText(String.valueOf(total));
-        lblmembresiasConValor.setText(String.valueOf(activas));
-        lblmembresiasSinValor.setText(String.valueOf(inactivas));
-        lblIngresosTotales.setText(String.format("$%.0f", ingresos));
+        lblmembresiasTotales.setText(String.valueOf(totalMembresias));
+        lblmembresiasConValor.setText(String.valueOf(membresiasActivas));
+        lblmembresiasSinValor.setText(String.valueOf(membresiasInactivas));
+        lblIngresosTotales.setText(String.format("$%.0f", ingresosTotales));
     }
 }
