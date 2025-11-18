@@ -115,6 +115,7 @@ public abstract class Membresia {
         return tipo;
     }
 
-    public LocalDate getFechaFin() {
+    public void getFechaFin() {
+        return;
     }
 }
