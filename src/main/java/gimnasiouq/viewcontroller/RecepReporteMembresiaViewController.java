@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -68,8 +67,8 @@ public class RecepReporteMembresiaViewController implements Initializable {
 
         tcFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getInicio().toString()));
         tcFechaVencimiento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFin().toString()));
-        tcPlanMembresia.setCellValueFactory(cellData -> new SimpleStringProperty("N/A")); // El plan no está en la membresia
-        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        tcPlanMembresia.setCellValueFactory(cellData -> new SimpleStringProperty("N/A"));
+        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo()));
         tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.0f", cellData.getValue().getCosto())));
     }
 

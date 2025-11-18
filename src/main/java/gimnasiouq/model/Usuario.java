@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Usuario {
+//atributos
+    public abstract class Usuario {
+        private String nombre;
+        private String identificacion;
+        private int edad;
+        private String celular;
+        private String tipoMembresia;
+        private Membresia membresiaObj;
 
-    private String nombre;
-    private String identificacion;
-    private int edad;
-    private String celular;
-    private String tipoMembresia;
-    private Membresia membresiaObj;
-    // private final List<ReservaClase> reservas = new ArrayList<>();
-
+//constructor
     public Usuario(String nombre, String identificacion, int edad, String celular, String membresia) {
         this.nombre = nombre;
         this.identificacion = identificacion;
@@ -26,14 +26,10 @@ public abstract class Usuario {
         this.membresiaObj = null;
     }
 
-    public Usuario() {
-
-    }
-
+//get y set
     public String getNombre() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -45,11 +41,9 @@ public abstract class Usuario {
         this.identificacion = identificacion;
     }
 
-
     public int getEdad() {
         return edad;
     }
-
     public void setEdad(int edad) {
         this.edad = edad;
     }
@@ -57,7 +51,6 @@ public abstract class Usuario {
     public String getCelular() {
         return celular;
     }
-
     public void setCelular(String celular) {
         this.celular = celular;
     }
@@ -65,19 +58,13 @@ public abstract class Usuario {
     public String getMembresia() {
         return tipoMembresia;
     }
-
     public void setMembresia(String membresia) {
         this.tipoMembresia = membresia;
     }
 
-    // public List<ReservaClase> getReservas() {
-    //     return reservas;
-    // }
-
     public String getTipoMembresia() {
         return tipoMembresia;
     }
-
     public void setTipoMembresia(String tipoMembresia) {
         this.tipoMembresia = tipoMembresia;
     }
@@ -85,7 +72,6 @@ public abstract class Usuario {
     public Membresia getMembresiaObj() {
         return membresiaObj;
     }
-
     public void setMembresiaObj(Membresia membresiaObj) {
         this.membresiaObj = membresiaObj;
         if (membresiaObj != null) {
@@ -164,6 +150,7 @@ public abstract class Usuario {
         return membresiaObj.getFin().format(formatter);
     }
 
+// to string
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -3,6 +3,7 @@ package gimnasiouq.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+//atributos
 public class ControlAcceso {
     private LocalDate fecha;
     private LocalTime hora;
@@ -11,6 +12,7 @@ public class ControlAcceso {
     private String tipoMembresia;
     private boolean estado;
 
+//constructor
     public ControlAcceso(LocalDate fecha, LocalTime hora, String nombre, String identificacion, String tipoMembresia, boolean estado) {
         this.fecha = fecha;
         this.hora = hora;
@@ -20,6 +22,7 @@ public class ControlAcceso {
         this.estado = estado;
     }
 
+//get y set
     public LocalDate getFecha() {
         return fecha;
     }
@@ -68,6 +71,7 @@ public class ControlAcceso {
         this.estado = estado;
     }
 
+//to string
     @Override
     public String toString() {
         return "ControlAcceso{" +

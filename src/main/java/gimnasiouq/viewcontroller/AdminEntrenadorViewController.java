@@ -4,229 +4,169 @@ import gimnasiouq.factory.ModelFactory;
 import gimnasiouq.model.Entrenador;
 import gimnasiouq.model.Gimnasio;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class AdminEntrenadorViewController {
-    private ModelFactory modelFactory;
+public class AdminEntrenadorViewController implements Initializable {
+
     private Gimnasio gimnasio;
-    ObservableList<Entrenador> listaEntrenadores;
-    Entrenador entrenadorSeleccionado;
+    private ObservableList<Entrenador> listaEntrenadores;
+    private Entrenador entrenadorSeleccionado;
 
     @FXML
     private TableView<Entrenador> tableEntrenador;
-
     @FXML
     private TableColumn<Entrenador, String> tcCargo;
-
     @FXML
     private TableColumn<Entrenador, String> tcCorreo;
-
     @FXML
     private TableColumn<Entrenador, String> tcEdad;
-
     @FXML
     private TableColumn<Entrenador, String> tcIdentificacion;
-
     @FXML
     private TableColumn<Entrenador, String> tcNombre;
-
     @FXML
     private TextField txtCargo;
-
     @FXML
     private TextField txtCorreo;
-
     @FXML
     private TextField txtEdad;
-
     @FXML
     private TextField txtIdentificacion;
-
     @FXML
     private TextField txtNombre;
 
-    @FXML
-    void onActualizar() {
-        actualizarEntrenador();
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.gimnasio = ModelFactory.getInstance().getGimnasio();
+        this.listaEntrenadores = FXCollections.observableArrayList(gimnasio.getListaEntrenador());
 
-    @FXML
-    void onEliminar() {
-        eliminarEntrenador();
-    }
-
-    @FXML
-    void onGuardar() {
-        guardarEntrenador();
-    }
-
-    @FXML
-    void onNuevo() {
-        nuevoEntrenador();
-    }
-
-    private void nuevoEntrenador() {
-        limpiarCampos();
-        if (tableEntrenador != null) {
-            tableEntrenador.getSelectionModel().clearSelection();
-        }
-        entrenadorSeleccionado = null;
-    }
-
-    private void guardarEntrenador() {
-        Entrenador entrenador = buildEntrenadorFromFields();
-        if (entrenador == null) return;
-
-        if (modelFactory.agregarEntrenador(entrenador)) {
-            mostrarAlerta("Éxito", "Entrenador creado exitosamente", Alert.AlertType.INFORMATION);
-            limpiarCampos();
-            if (tableEntrenador != null) {
-                tableEntrenador.refresh();
-            }
-        } else {
-            mostrarAlerta("Error", "No se pudo crear el entrenador. Verifique que no exista un entrenador con la misma identificación.", Alert.AlertType.ERROR);
-        }
-    }
-
-    private void actualizarEntrenador() {
-        if (entrenadorSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla", Alert.AlertType.ERROR);
-            return;
-        }
-
-        Entrenador entrenadorActualizado = buildEntrenadorFromFields();
-        if (entrenadorActualizado == null) return;
-
-        try {
-            if (modelFactory.actualizarEntrenador(entrenadorSeleccionado.getIdentificacion(), entrenadorActualizado) != null) {
-                mostrarAlerta("Éxito", "Entrenador actualizado exitosamente", Alert.AlertType.INFORMATION);
-                limpiarCampos();
-                if (tableEntrenador != null) {
-                    tableEntrenador.refresh();
-                }
-            } else {
-                mostrarAlerta("Error", "No se pudo actualizar el entrenador", Alert.AlertType.ERROR);
-            }
-        } catch (Exception e) {
-            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
-    private Entrenador buildEntrenadorFromFields() {
-        String nombre = txtNombre.getText();
-        String identificacion = txtIdentificacion.getText();
-        String edad = txtEdad.getText();
-        String correo = txtCorreo.getText();
-        String cargo = txtCargo.getText();
-
-        if (nombre == null || nombre.isEmpty() ||
-                identificacion == null || identificacion.isEmpty() ||
-                edad == null || edad.isEmpty() ||
-                correo == null || correo.isEmpty() ||
-                cargo == null || cargo.isEmpty()) {
-            mostrarAlerta("Error", "Complete todos los campos", Alert.AlertType.ERROR);
-            return null;
-        }
-        return new Entrenador(nombre, identificacion, edad, correo, cargo);
-    }
-
-    private void eliminarEntrenador() {
-        if (entrenadorSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla", Alert.AlertType.ERROR);
-            return;
-        }
-
-        try {
-            if (modelFactory.eliminarEntrenador(entrenadorSeleccionado.getIdentificacion())) {
-                mostrarAlerta("Éxito", "Entrenador eliminado exitosamente", Alert.AlertType.INFORMATION);
-                limpiarCampos();
-                if (tableEntrenador != null) {
-                    tableEntrenador.refresh();
-                }
-            } else {
-                mostrarAlerta("Error", "No se pudo eliminar el entrenador", Alert.AlertType.ERROR);
-            }
-        } catch (Exception e) {
-            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
-    @FXML
-    public void initialize() {
-        assert tableEntrenador != null : "fx:id=\"tableEntrenador\" was not injected: check your FXML file.";
-        assert tcCargo != null : "fx:id=\"tcCargo\" was not injected: check your FXML file.";
-        assert tcCorreo != null : "fx:id=\"tcCorreo\" was not injected: check your FXML file.";
-        assert tcEdad != null : "fx:id=\"tcEdad\" was not injected: check your FXML file.";
-        assert tcIdentificacion != null : "fx:id=\"tcIdentificacion\" was not injected: check your FXML file.";
-        assert tcNombre != null : "fx:id=\"tcNombre\" was not injected: check your FXML file.";
-        assert txtCargo != null : "fx:id=\"txtCargo\" was not injected: check your FXML file.";
-        assert txtCorreo != null : "fx:id=\"txtCorreo\" was not injected: check your FXML file.";
-        assert txtEdad != null : "fx:id=\"txtEdad\" was not injected: check your FXML file.";
-        assert txtIdentificacion != null : "fx:id=\"txtIdentificacion\" was not injected: check your FXML file.";
-        assert txtNombre != null : "fx:id=\"txtNombre\" was not injected: check your FXML file.";
-
-        this.modelFactory = ModelFactory.getInstance();
-        this.gimnasio = modelFactory.getGimnasio();
-        initView();
-    }
-
-    private void initView() {
         initDataBinding();
-        listaEntrenadores = modelFactory.obtenerEntrenadorObservable();
-        if (tableEntrenador != null) {
-            tableEntrenador.setItems(listaEntrenadores);
-        }
+        tableEntrenador.setItems(listaEntrenadores);
         listenerSelection();
     }
 
     private void initDataBinding() {
-        if (tcNombre != null) {
-            tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        }
-        if (tcIdentificacion != null) {
-            tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdentificacion()));
-        }
-        if (tcEdad != null) {
-            tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEdad()));
-        }
-        if (tcCorreo != null) {
-            tcCorreo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCorreo()));
-        }
-        if (tcCargo != null) {
-            tcCargo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
-        }
+        tcNombre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+        tcIdentificacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        tcEdad.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getEdad())));
+        tcCorreo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCorreo()));
+        tcCargo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCargo()));
     }
 
     private void listenerSelection() {
-        if (tableEntrenador != null) {
-            tableEntrenador.getSelectionModel().selectedItemProperty().addListener(
-                    (observable, oldValue, newSelection) -> {
-                        entrenadorSeleccionado = newSelection;
-                        mostrarInformacionEntrenador(entrenadorSeleccionado);
-                    });
+        tableEntrenador.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            entrenadorSeleccionado = newSelection;
+            mostrarInformacionEntrenador(entrenadorSeleccionado);
+        });
+    }
+
+    @FXML
+    void onNuevo() {
+        limpiarCampos();
+        entrenadorSeleccionado = null;
+        tableEntrenador.getSelectionModel().clearSelection();
+        txtIdentificacion.setEditable(true);
+    }
+
+    @FXML
+    void onGuardar() {
+        try {
+            Entrenador entrenador = buildEntrenadorFromFields();
+            if (entrenador == null) return; // Error de validación
+
+            gimnasio.registrarEntrenador(entrenador);
+            listaEntrenadores.add(entrenador); // Actualizar la lista observable
+
+            limpiarCampos();
+            mostrarAlerta("Éxito", "Entrenador creado exitosamente.", Alert.AlertType.INFORMATION);
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error de Formato", "La edad debe ser un número válido.", Alert.AlertType.ERROR);
+        } catch (Exception e) {
+            mostrarAlerta("Error al Guardar", e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    @FXML
+    void onActualizar() {
+        if (entrenadorSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            Entrenador entrenadorActualizado = buildEntrenadorFromFields();
+            if (entrenadorActualizado == null) return;
+
+            gimnasio.actualizarEntrenador(entrenadorSeleccionado.getId(), entrenadorActualizado);
+            tableEntrenador.refresh(); // Refrescar para mostrar los cambios
+            limpiarCampos();
+            mostrarAlerta("Éxito", "Entrenador actualizado exitosamente.", Alert.AlertType.INFORMATION);
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error de Formato", "La edad debe ser un número válido.", Alert.AlertType.ERROR);
+        } catch (Exception e) {
+            mostrarAlerta("Error al Actualizar", e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    void onEliminar() {
+        if (entrenadorSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un entrenador de la tabla.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        Optional<ButtonType> result = mostrarAlertaConfirmacion("Confirmar Eliminación",
+                "¿Está seguro de que desea eliminar al entrenador " + entrenadorSeleccionado.getNombre() + "?");
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                gimnasio.eliminarEntrenador(entrenadorSeleccionado.getId());
+                listaEntrenadores.remove(entrenadorSeleccionado); // Actualizar la lista observable
+                limpiarCampos();
+                mostrarAlerta("Éxito", "Entrenador eliminado exitosamente.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                mostrarAlerta("Error al Eliminar", e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    private Entrenador buildEntrenadorFromFields() throws NumberFormatException {
+        String nombre = txtNombre.getText();
+        String identificacion = txtIdentificacion.getText();
+        String edadStr = txtEdad.getText();
+        String correo = txtCorreo.getText();
+        String cargo = txtCargo.getText();
+
+        if (nombre.isEmpty() || identificacion.isEmpty() || edadStr.isEmpty() || correo.isEmpty() || cargo.isEmpty()) {
+            mostrarAlerta("Error", "Complete todos los campos.", Alert.AlertType.ERROR);
+            return null;
+        }
+
+        int edad = Integer.parseInt(edadStr); // Lanza NumberFormatException si no es válido
+        return new Entrenador(nombre, identificacion, edad, correo, cargo);
     }
 
     private void mostrarInformacionEntrenador(Entrenador entrenador) {
         if (entrenador != null) {
             txtNombre.setText(entrenador.getNombre());
-            txtIdentificacion.setText(entrenador.getIdentificacion());
-            txtEdad.setText(entrenador.getEdad());
+            txtIdentificacion.setText(entrenador.getId());
+            txtEdad.setText(String.valueOf(entrenador.getEdad()));
             txtCorreo.setText(entrenador.getCorreo());
             txtCargo.setText(entrenador.getCargo());
+            txtIdentificacion.setEditable(false);
         } else {
             limpiarCampos();
         }
-    }
-
-    private void mostrarAlerta(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void limpiarCampos() {
@@ -235,5 +175,23 @@ public class AdminEntrenadorViewController {
         txtEdad.clear();
         txtCorreo.clear();
         txtCargo.clear();
+        txtIdentificacion.setEditable(true);
+        entrenadorSeleccionado = null;
+    }
+
+    private void mostrarAlerta(String titulo, String contenido, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
+
+    private Optional<ButtonType> mostrarAlertaConfirmacion(String titulo, String contenido) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(contenido);
+        return alert.showAndWait();
     }
 }

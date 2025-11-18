@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class RecepUsuariosViewController implements Initializable {
+public class AdminUsuariosViewController implements Initializable {
 
     private Gimnasio gimnasio;
     private ObservableList<Usuario> listaUsuarios;
@@ -63,6 +63,7 @@ public class RecepUsuariosViewController implements Initializable {
         tableUsuario.setItems(listaUsuarios);
         listenerSelection();
 
+        // El ComboBox de membresía es solo de referencia, no se usa para crear/actualizar aquí.
         comboBoxMembresia.setDisable(true);
         comboBoxUsuarios.getItems().addAll("Externo", "Estudiante", "Trabajador");
     }
@@ -129,7 +130,9 @@ public class RecepUsuariosViewController implements Initializable {
                 return;
             }
 
+            // CORRECCIÓN: Crear un objeto temporal solo con los datos a actualizar.
             Usuario datosNuevos = new Usuario(nombre, "", edad, celular, "") {
+                // Se crea una clase anónima que extiende la clase abstracta, solo para pasar los datos.
             };
 
             gimnasio.actualizarUsuario(usuarioSeleccionado.getIdentificacion(), datosNuevos);
@@ -181,7 +184,7 @@ public class RecepUsuariosViewController implements Initializable {
 
     private boolean datosValidos(Usuario usuario) {
         if (usuario.getNombre() == null || usuario.getNombre().isEmpty() ||
-            usuario.getIdentificacion() == null || usuario.getIdentificacion().isEmpty()) {
+                usuario.getIdentificacion() == null || usuario.getIdentificacion().isEmpty()) {
             mostrarAlerta("Datos Incompletos", "Por favor complete todos los campos obligatorios (Nombre, ID).", Alert.AlertType.ERROR);
             return false;
         }

@@ -2,17 +2,16 @@ package gimnasiouq.model;
 
 import java.time.LocalDate;
 
-//atrubutos
-    public class MembresiaBasica extends Membresia {
+public class MembresiaBasica extends Membresia {
 
-
-//cosntructor
-    public MembresiaBasica(double costo, LocalDate fechaInicio, LocalDate fechaFin, boolean estado, boolean accesoGeneral) {
-        super("Basica", costo, fechaInicio, fechaFin, true, true);
+//constructor
+    public MembresiaBasica(double costo, LocalDate inicio, LocalDate fin) {
+        super("Basica", costo, inicio, fin, true);
+        setAccesoGym(true);
     }
-
-//metodo para obtener los beneficios de la membresia
+//to string
+    @Override
     public String obtenerBeneficios() {
-        return "• Acceso general al gimnasio";
+        return "• Acceso general a las instalaciones del gimnasio.";
     }
 }

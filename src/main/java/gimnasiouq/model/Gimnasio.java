@@ -197,7 +197,7 @@ public class Gimnasio {
         }
 
         if (tier.equals("basica") || tier.equalsIgnoreCase("básica")) {
-            return new MembresiaBasica(costo, fechaInicio, fechaFin, true, true);
+            return new MembresiaBasica(costo, fechaInicio, fechaFin);
         } else if (tier.equals("premium")) {
             return new MembresiaPremium(costo, fechaInicio, fechaFin);
         } else if (tier.equals("vip")) {
@@ -212,11 +212,11 @@ public class Gimnasio {
 
 // metodo para verificar existencia de entrenador
     public boolean verificarEntrenador(String identificacion) {
-        return listaEntrenador.stream().anyMatch(e -> e.getIdentificacion().equals(identificacion));
+        return listaEntrenador.stream().anyMatch(e -> e.getId().equals(identificacion));
     }
 
     public boolean agregarEntrenador(Entrenador entrenador) {
-        if (verificarEntrenador(entrenador.getIdentificacion())) {
+        if (verificarEntrenador(entrenador.getId())) {
             return false;
         }
         return listaEntrenador.add(entrenador);
@@ -224,7 +224,7 @@ public class Gimnasio {
 
 //metodo para buscar un entrenador
     public Optional<Entrenador> buscarEntrenador(String identificacion) {
-        return listaEntrenador.stream().filter(e -> e.getIdentificacion().equals(identificacion)).findFirst();
+        return listaEntrenador.stream().filter(e -> e.getId().equals(identificacion)).findFirst();
     }
 
 //metodo para actualizar un entrenador
@@ -241,7 +241,7 @@ public class Gimnasio {
 
 //metodo para eliminar un entrenador
     public boolean eliminarEntrenador(String identificacion) throws Exception {
-        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getIdentificacion().equals(identificacion));
+        boolean removed = this.listaEntrenador.removeIf(entrenador -> entrenador.getId().equals(identificacion));
         if (!removed) {
             throw new Exception("No se pudo eliminar. No existe un entrenador con el ID: " + identificacion);
         }
@@ -260,7 +260,7 @@ public class Gimnasio {
         if (usuario == null || usuario.getMembresiaObj() == null) {
             return false;
         }
-        return "VIP".equalsIgnoreCase(usuario.getMembresiaObj().getTipoMembresia());
+        return "VIP".equalsIgnoreCase(usuario.getMembresiaObj().getTipo());
     }
 
 //metodo para buscar el ingreso del usuario por identificacion
@@ -279,10 +279,8 @@ public class Gimnasio {
         ControlAcceso registro = new ControlAcceso(
                 LocalDate.now(),
                 LocalTime.now(),
-                u.getNombre(),
-                u.getIdentificacion(),
-                membresia != null ? membresia.getTipoMembresia() : "N/A",
-                membresia != null && membresia.isActiva()
+                "Ingreso",
+                u
         );
         return agregarRegistroAcceso(registro);
     }
@@ -351,4 +349,20 @@ public class Gimnasio {
         return listaReservasClases.size();
     }
 
+    public String autenticarEmpleado(String usuario, String contrasena) {
+        // Buscar en la lista de administradores
+        for (Administrador admin : listaAdministrador) {
+            if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(contrasena)) {
+                return "ADMINISTRADOR";
+            }
+        }
+
+        for (Recepcion recepcionista : listaRecepcionista) {
+            if (recepcionista.getUsuario().equals(usuario) && recepcionista.getContrasena().equals(contrasena)) {
+                return "RECEPCIONISTA";
+            }
+        }
+
+        return null;
+    }
 }
