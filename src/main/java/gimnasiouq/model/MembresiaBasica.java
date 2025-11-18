@@ -3,7 +3,7 @@ package gimnasiouq.model;
 import java.time.LocalDate;
 
 //atrubutos
-    public abstract class MembresiaBasica extends Membresia {
+    public class MembresiaBasica extends Membresia {
 
 
 //cosntructor

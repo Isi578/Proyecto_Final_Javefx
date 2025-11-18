@@ -181,7 +181,7 @@ public class Usuario {
     }
 
     public String getId() {
-
+        return "";
     }
 
     public void asignarMembresia(Membresia m) {

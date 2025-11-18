@@ -73,8 +73,7 @@ import java.util.Objects;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ReservaClase)) return false;
-        ReservaClase that = (ReservaClase) o;
+        if (!(o instanceof ReservaClase that)) return false;
         return cupoMaximo == that.cupoMaximo &&
                 Objects.equals(clase, that.clase) &&
                 Objects.equals(horario, that.horario) &&

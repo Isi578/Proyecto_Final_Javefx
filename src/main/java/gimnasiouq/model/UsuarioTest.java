@@ -15,9 +15,7 @@ public class UsuarioTest {
 
     @Test
     void testRegistrarUsuarioSinNombre() {
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Usuario("102", "", 22, "3112223333", "Externo");
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> new Usuario("102", "", 22, "3112223333", "Externo"));
 
         assertEquals("El nombre no puede estar vacío", ex.getMessage());
     }
@@ -31,9 +29,7 @@ public class UsuarioTest {
 
         s.registrarUsuario(u1);
 
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            s.registrarUsuario(u2);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> s.registrarUsuario(u2));
 
         assertEquals("El usuario con ese ID ya existe", ex.getMessage());
     }

@@ -2,6 +2,8 @@ package gimnasiouq.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 //atributos
 public abstract class Membresia {
     private String tipo;
@@ -13,7 +15,7 @@ public abstract class Membresia {
     private LocalDate fechaPago;
     private LocalTime horaPago;
 
-//constructor
+    //constructor
     public Membresia(String tipo, double costo, LocalDate inicio, LocalDate fin, boolean activa, boolean accesoGym) {
         this.tipo = tipo;
         this.costo = costo;
@@ -30,7 +32,18 @@ public abstract class Membresia {
         this.horaPago = LocalTime.now();
     }
 
-//get y set
+    public Membresia(LocalDate fechaPago, LocalTime horaPago) {
+        this(null, 0.0, null, null, false, null, null);
+        this.fechaPago = fechaPago;
+        this.horaPago = horaPago;
+    }
+
+    public Membresia(String premium, double costo, LocalDate inicio, LocalDate fin, boolean b, LocalDate fechaPago, LocalTime horaPago) {
+        this.fechaPago = fechaPago;
+        this.horaPago = horaPago;
+    }
+
+    //get y set
     public String getTipo() {
         return tipo;
     }
@@ -85,13 +98,13 @@ public abstract class Membresia {
         LocalDate hoy = LocalDate.now();
         return activa && (fin.isAfter(hoy) || fin.isEqual(hoy));
     }
-//metodo para saber los dias que quedan de a membresia
+//metodo para saber los días que quedan de a membresia
     public long diasRestantes() {
         LocalDate hoy = LocalDate.now();
         if (hoy.isAfter(fin)) {
             return 0;
         }
-        return java.time.temporal.ChronoUnit.DAYS.between(hoy, fin);
+        return ChronoUnit.DAYS.between(hoy, fin);
     }
 
 //to string
