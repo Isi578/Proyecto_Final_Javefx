@@ -1,8 +1,15 @@
 package gimnasiouq.model;
 
-public class Externo extends Usuario{
+    public class Externo extends Usuario {
 
-    public Externo(String nombre, String id, int edad, String telefono, String membresia) {
-        super(nombre, id, edad, telefono, membresia);
+//constructor
+    public Externo(String nombre, String identificacion, int edad, String celular, String membresia) {
+        super(nombre, identificacion, edad, celular, membresia);
     }
-}
+
+// to string
+        @Override
+        public String toString() {
+            return "Externo{} " + super.toString();
+        }
+    }

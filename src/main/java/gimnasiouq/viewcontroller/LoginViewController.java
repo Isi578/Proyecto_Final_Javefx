@@ -1,60 +1,62 @@
 package gimnasiouq.viewcontroller;
 
 import gimnasiouq.GimnasioApp;
-import gimnasiouq.viewcontroller.AdminViewController;
-import gimnasiouq.viewcontroller.RecepViewController;
+import gimnasiouq.factory.ModelFactory;
+import gimnasiouq.model.Gimnasio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LoginViewController {
+public class LoginViewController implements Initializable {
 
-    @FXML private Button loginButton;
-    @FXML private Label txtAdvertencia;
-    @FXML private PasswordField txtPasswordLogin;
-    @FXML private ComboBox <String> comboBoxUser;
+    private Gimnasio gimnasio;
+
     @FXML
-    public void initialize() {
-        comboBoxUser.getItems().addAll("Administrador", "Recepcionista");
+    private Button loginButton;
+    @FXML
+    private Label txtAdvertencia;
+    @FXML
+    private PasswordField txtPasswordLogin;
+    @FXML
+    private TextField txtUserLogin; // Asumiendo que el FXML tiene un TextField para el usuario
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.gimnasio = ModelFactory.getInstance().getGimnasio();
+        txtAdvertencia.setText("");
     }
 
     @FXML
     void login(ActionEvent event) {
-
-        String user = comboBoxUser.getValue();
+        String user = txtUserLogin.getText();
         String pass = txtPasswordLogin.getText();
-        String resultado = procesarLogin(user, pass);
 
-        if ("ADMINISTRADOR".equals(resultado)) {
-            GimnasioApp.goToAdministrador();
-        } else if ("RECEPCIONISTA".equals(resultado)) {
-            GimnasioApp.goToRecepcionista();
+        if (user == null || user.trim().isEmpty() || pass == null || pass.trim().isEmpty()) {
+            mostrarAlerta("Error", "Los campos de usuario y contraseña no pueden estar vacíos.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        String rol = gimnasio.autenticarEmpleado(user, pass);
+
+        if (rol != null) {
+            if (rol.equals("ADMINISTRADOR")) {
+                GimnasioApp.goToAdministrador();
+            } else if (rol.equals("RECEPCIONISTA")) {
+                GimnasioApp.goToRecepcionista();
+            }
         } else {
-            mostrarVentanaEmergente("Error de autenticación", null, "Credenciales incorrectas", Alert.AlertType.ERROR);
+            mostrarAlerta("Error de Autenticación", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
+            txtAdvertencia.setText("Credenciales incorrectas");
         }
     }
 
-    protected String procesarLogin(String user, String pass) {
-        if (user == null || user.trim().isEmpty()) {
-            return "ERROR_USUARIO_VACIO";
-        }
-
-        if (pass == null || pass.trim().isEmpty()) {
-            return "ERROR_PASSWORD_VACIO";
-        }
-        if (AdminViewController.validarCredenciales(user, pass)) {
-            return "ADMINISTRADOR";
-        } else if (RecepViewController.validarCredenciales(user, pass)) {
-            return "RECEPCIONISTA";
-        } else {
-            return "ERROR_CREDENCIALES";
-        }
-    }
-
-    private void mostrarVentanaEmergente(String titulo, String header, String contenido, Alert.AlertType alertType){
+    private void mostrarAlerta(String titulo, String contenido, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(titulo);
-        alert.setHeaderText(header);
+        alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
     }

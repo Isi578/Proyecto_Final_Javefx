@@ -1,6 +1,7 @@
 package gimnasiouq.viewcontroller;
 
 import gimnasiouq.factory.ModelFactory;
+import gimnasiouq.model.Gimnasio;
 import gimnasiouq.model.Membresia;
 import gimnasiouq.model.Usuario;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,74 +12,93 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AdminReporteMembresiaViewController implements Initializable {
 
-    private ModelFactory modelFactory;
+    private Gimnasio gimnasio;
 
     @FXML
     private Label lblIngresosTotales;
-
     @FXML
-    private Label lblmembresiasConValor;
-
+    private Label lblmembresiasConValor; // Activas
     @FXML
-    private Label lblmembresiasSinValor;
-
+    private Label lblmembresiasSinValor; // Inactivas
     @FXML
     private Label lblmembresiasTotales;
-
     @FXML
     private TableView<Membresia> tableMembresias;
-
     @FXML
     private TableColumn<Membresia, String> tcCosto;
-
     @FXML
     private TableColumn<Membresia, String> tcFechaInicio;
-
     @FXML
     private TableColumn<Membresia, String> tcFechaVencimiento;
-
-    @FXML
-    private TableColumn<Membresia, String> tcPlanMembresia;
-
     @FXML
     private TableColumn<Membresia, String> tcTipoMembresia;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        modelFactory = ModelFactory.getInstance();
+        // Obtener la instancia de Gimnasio
+        this.gimnasio = ModelFactory.getInstance().getGimnasio();
+
+        // Cargar y procesar los datos
+        actualizarReporte();
+    }
+
+    private void actualizarReporte() {
+        // Obtener todas las membresías de todos los usuarios
+        List<Membresia> todasLasMembresias = gimnasio.getListaUsuarios().stream()
+                .map(Usuario::getMembresiaObj)
+                .filter(Objects::nonNull) // Filtra usuarios sin membresía
+                .collect(Collectors.toList());
+
+        // Poblar la tabla
+        ObservableList<Membresia> membresiasObservables = FXCollections.observableArrayList(todasLasMembresias);
+        tableMembresias.setItems(membresiasObservables);
         initDataBinding();
-        initIndicadores();
+
+        // Calcular y mostrar los indicadores
+        initIndicadores(todasLasMembresias);
     }
 
     private void initDataBinding() {
-        ObservableList<Usuario> listaUsuarios = modelFactory.obtenerUsuariosObservable();
-        ObservableList<Membresia> listaMembresias = listaUsuarios.stream()
-                .map(Usuario::getMembresiaObj)
-                .filter(m -> m != null)
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        tableMembresias.setItems(listaMembresias);
-
-        tcFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getInicio().toString()));
-        tcFechaVencimiento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFin().toString()));
-        tcPlanMembresia.setCellValueFactory(cellData -> new SimpleStringProperty("N/A")); // El plan no está en la membresia
-        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoMembresia()));
+        tcFechaInicio.setCellValueFactory(cellData -> {
+            Membresia m = cellData.getValue();
+            return new SimpleStringProperty(m.getInicio() != null ? m.getInicio().format(formatter) : "N/A");
+        });
+        tcFechaVencimiento.setCellValueFactory(cellData -> {
+            Membresia m = cellData.getValue();
+            return new SimpleStringProperty(m.getFin() != null ? m.getFin().format(formatter) : "N/A");
+        });
+        tcTipoMembresia.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo()));
         tcCosto.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.0f", cellData.getValue().getCosto())));
     }
 
-    private void initIndicadores() {
-        modelFactory.actualizarReportes(); // Asegura que los datos estén frescos
+    private void initIndicadores(List<Membresia> membresias) {
+        // Calcular total de membresías
+        long total = membresias.size();
 
-        lblmembresiasTotales.textProperty().bind(modelFactory.totalMembresiasProperty().asString());
-        lblmembresiasConValor.textProperty().bind(modelFactory.membresiasActivasProperty().asString());
-        lblmembresiasSinValor.textProperty().bind(modelFactory.membresiasInactivasProperty().asString());
-        lblIngresosTotales.textProperty().bind(modelFactory.ingresosTotalesProperty().asString("$%.0f"));
+        // Calcular membresías activas
+        long activas = membresias.stream().filter(Membresia::estaVigente).count();
+
+        // Calcular membresías inactivas
+        long inactivas = total - activas;
+
+        // Calcular ingresos totales
+        double ingresos = membresias.stream().mapToDouble(Membresia::getCosto).sum();
+
+        // Asignar los valores a los Labels
+        lblmembresiasTotales.setText(String.valueOf(total));
+        lblmembresiasConValor.setText(String.valueOf(activas));
+        lblmembresiasSinValor.setText(String.valueOf(inactivas));
+        lblIngresosTotales.setText(String.format("$%.0f", ingresos));
     }
 }

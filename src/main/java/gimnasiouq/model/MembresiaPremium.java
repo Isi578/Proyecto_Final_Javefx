@@ -6,11 +6,14 @@ import java.time.LocalDate;
 
 //constructor
     public MembresiaPremium(double costo, LocalDate inicio, LocalDate fin) {
-        super("Premium", costo, inicio, fin, true, true);
+        super("Premium", costo, inicio, fin, true);
+        setAccesoGym(true);
     }
 
-//metodo para obtener los beneficios de la membresia
+//to string
+    @Override
     public String obtenerBeneficios() {
-        return "• Acceso general al gimnasio y clases grupales";
+        return "• Acceso general a las instalaciones.\n" +
+               "• Acceso a todas las clases grupales.";
     }
 }

@@ -2,15 +2,16 @@ package gimnasiouq.model;
 
 import java.util.Objects;
 
-public class ReservaClase {
+//atributos
+    public class ReservaClase {
+        private String clase;
+        private String horario;
+        private String entrenador;
+        private String fecha;
+        private String identificacionUsuario;
+        private int cupoMaximo;
 
-    private String clase;
-    private String horario;
-    private String entrenador;
-    private String fecha;
-    private String identificacionUsuario;
-    private int cupoMaximo;
-
+//constructor
     public ReservaClase(String clase, String horario, String entrenador, String fecha) {
         this.clase = clase;
         this.horario = horario;
@@ -19,6 +20,7 @@ public class ReservaClase {
         this.cupoMaximo = 5; // Cupo máximo predeterminado
     }
 
+//get y set
     public String getClase() {
         return clase;
     }
@@ -67,6 +69,7 @@ public class ReservaClase {
         this.cupoMaximo = cupoMaximo;
     }
 
+//to string
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
