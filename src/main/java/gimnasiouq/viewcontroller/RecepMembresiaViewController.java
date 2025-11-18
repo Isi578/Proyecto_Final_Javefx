@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 public class RecepMembresiaViewController {
 
@@ -172,7 +171,7 @@ public class RecepMembresiaViewController {
     @FXML
     void initialize() {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = (ObservableList<Usuario>) gimnasio.getListaUsuarios();
+        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
         initView();
         comboBoxPlanMembresia.getItems().addAll("Mensual", "Trimestral", "Anual");
 

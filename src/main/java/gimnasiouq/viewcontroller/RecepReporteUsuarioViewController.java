@@ -16,12 +16,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class RecepReporteUsuarioViewController implements Initializable {
 
-    private Gimnasio gimnasio;
     private ObservableList<Usuario> listaUsuarios; // Declarar aquí para usar la referencia directa
 
     @FXML
@@ -43,8 +41,8 @@ public class RecepReporteUsuarioViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios(); // Obtener la ObservableList directamente del modelo
+        Gimnasio gimnasio = ModelFactory.getInstance().getGimnasio();
+        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios()); // Corregido: Convertir List a ObservableList
         initDataBinding();
         tableUsuarios.setItems(listaUsuarios); // Establecer la lista directamente en la tabla
         actualizarReporte();

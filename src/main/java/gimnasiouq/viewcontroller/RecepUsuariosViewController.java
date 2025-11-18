@@ -57,7 +57,7 @@ public class RecepUsuariosViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaUsuarios = gimnasio.getListaUsuarios();
+        this.listaUsuarios = FXCollections.observableArrayList(gimnasio.getListaUsuarios());
 
         initDataBinding();
         tableUsuario.setItems(listaUsuarios);
@@ -219,7 +219,7 @@ public class RecepUsuariosViewController implements Initializable {
             case "Estudiante":
                 return new Estudiante(nombre, id, edad, telefono, tipoMembresia, 0.1);
             case "Trabajador":
-                return new Trabajador(nombre, id, edad, telefono, tipoMembresia, "N/A");
+                return new Trabajador(nombre, id, edad, telefono, tipoMembresia);
             default: // Externo
                 return new Externo(nombre, id, edad, telefono, tipoMembresia);
         }

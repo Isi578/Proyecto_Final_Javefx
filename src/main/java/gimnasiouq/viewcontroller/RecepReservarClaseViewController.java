@@ -71,7 +71,7 @@ public class RecepReservarClaseViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.gimnasio = ModelFactory.getInstance().getGimnasio();
-        this.listaReservas = gimnasio.getListaReservasClases(); // Obtener la ObservableList directamente del modelo
+        this.listaReservas = FXCollections.observableArrayList(gimnasio.getListaReservasClases()); // Obtener la ObservableList directamente del modelo
 
         // Poblar ComboBoxes
         comboBoxClase.getItems().addAll("Yoga", "Spinning", "Boxeo", "Funcional"); // Añadido Boxeo y Funcional para consistencia
@@ -80,7 +80,7 @@ public class RecepReservarClaseViewController implements Initializable {
         comboBoxEntrenador.setDisable(true);
 
         initDataBinding();
-        tableUsuario.setItems(gimnasio.getListaUsuarios()); // Cargar usuarios en la tabla
+        tableUsuario.setItems(FXCollections.observableArrayList(gimnasio.getListaUsuarios())); // Cargar usuarios en la tabla
         listenerSelection();
         lblBeneficios.setText("Seleccione un usuario");
 
