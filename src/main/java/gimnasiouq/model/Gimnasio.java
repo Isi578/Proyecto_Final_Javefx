@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-// Clase principal del modelo que gestiona todas las listas de datos.
 public class Gimnasio {
     private List<Usuario> listaUsuarios;
     private List<Recepcion> listaRecepcionista;

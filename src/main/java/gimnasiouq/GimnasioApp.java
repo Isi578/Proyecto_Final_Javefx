@@ -1,6 +1,6 @@
 package gimnasiouq;
 
-import gimnasiouq.factory.ModelFactory; // Importar ModelFactory
+import gimnasiouq.factory.ModelFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
